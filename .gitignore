@@ -1,0 +1,70 @@
+# dependencies
+**/node_modules/
+
+# Expo
+**/.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native build output / prebuild dirs
+**/ios/
+**/android/
+**/.gradle/
+*.apk
+*.aab
+*.ipa
+
+# Next.js / Vercel
+**/.next/
+.vercel/
+
+# Test / build artifacts
+coverage/
+*.tsbuildinfo
+.eslintcache
+
+# Signing keys & certs
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Metro
+.metro-health-check*
+
+# Logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Editors
+**/.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# env files — keep .env.example checked in, everything else local
+.env
+.env.*
+!.env.example
+
+# EAS build config — contains secrets that must match .env; copy eas.json.example
+eas.json
+
+# Clerk keyless mode temp credentials
+**/.clerk/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# misc
+app-example

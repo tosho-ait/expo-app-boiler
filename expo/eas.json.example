@@ -1,0 +1,50 @@
+{
+  "cli": {
+    "version": ">= 7.6.0"
+  },
+  "//": "Copy this file to eas.json and fill in real values before running EAS builds. eas.json is gitignored because these values must match (and duplicate) what is in .env — EAS does not read .env files at build time, so when you rotate a secret you must update both places.",
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_...",
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.100:3000",
+        "EXPO_PUBLIC_RC_APPLE_KEY": "appl_...",
+        "EXPO_PUBLIC_RC_GOOGLE_KEY": "",
+        "EXPO_PUBLIC_RC_ENTITLEMENT": "pro",
+        "EXPO_PUBLIC_RC_YEARLY_PRODUCT_ID": "com.example.app.pro.yearly"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_live_...",
+        "EXPO_PUBLIC_API_URL": "https://example.com",
+        "EXPO_PUBLIC_RC_APPLE_KEY": "appl_...",
+        "EXPO_PUBLIC_RC_GOOGLE_KEY": "",
+        "EXPO_PUBLIC_RC_ENTITLEMENT": "pro",
+        "EXPO_PUBLIC_RC_YEARLY_PRODUCT_ID": "com.example.app.pro.yearly"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_live_...",
+        "EXPO_PUBLIC_API_URL": "https://example.com",
+        "EXPO_PUBLIC_RC_APPLE_KEY": "appl_...",
+        "EXPO_PUBLIC_RC_GOOGLE_KEY": "",
+        "EXPO_PUBLIC_RC_ENTITLEMENT": "pro",
+        "EXPO_PUBLIC_RC_YEARLY_PRODUCT_ID": "com.example.app.pro.yearly"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "your-apple-id@example.com",
+        "ascAppId": "0000000000",
+        "appleTeamId": "XXXXXXXXXX"
+      }
+    }
+  }
+}

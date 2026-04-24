@@ -1,0 +1,32 @@
+version: '3.6'
+
+services:
+
+  next:
+    image: appboiler/web:latest
+    container_name: next
+    restart: unless-stopped
+
+  apache:
+    image: appboiler/apache:latest
+    container_name: apache
+    restart: unless-stopped
+    volumes:
+      - letsencrypt-certs:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+
+  certbot-standalone:
+    image: certbot/certbot:latest
+    container_name: certbot-standalone
+    volumes:
+      - letsencrypt-certs:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    entrypoint: "/bin/sh -c ' certbot certonly --standalone --non-interactive --agree-tos --expand --email ${LE_EMAIL} -d ${LE_DOMAIN} -d www.${LE_DOMAIN}'"
+
+volumes:
+  letsencrypt-certs:
+    name: "letsencrypt-certs"

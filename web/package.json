@@ -1,0 +1,41 @@
+{
+  "name": "appboiler-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@clerk/backend": "^1.30.0",
+    "@clerk/nextjs": "^6.36.2",
+    "@next/third-parties": "^16.0.8",
+    "@appboiler/shared": "file:../shared",
+    "axios": "^1.13.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.7.4",
+    "install": "^0.13.0",
+    "lucide-react": "^0.501.0",
+    "moment": "^2.30.1",
+    "mongoose": "^8.13.2",
+    "motion": "^12.7.4",
+    "next": "^16.0.8",
+    "npm": "^11.3.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "24.9.2",
+    "@types/react": "19.2.2",
+    "eslint": "^9",
+    "eslint-config-next": "^16.0.8",
+    "tailwindcss": "^4",
+    "typescript": "5.8.3"
+  }
+}
