@@ -12,7 +12,6 @@ export const AppRoutingGate = ({ children }: { children: React.ReactNode; }) => 
         isClerkSignedIn,
         isUserSignedIn,
         isUserOnlineSignedIn,
-        isAnonymousUser,
         userOnlineId,
         userPrimaryId,
         getToken,
@@ -83,8 +82,6 @@ export const AppRoutingGate = ({ children }: { children: React.ReactNode; }) => 
         }
     }
 
-    // Forcefully block redirects if we somehow know we're in onboarding, though pathname should handle this.
-    // Let's log exactly why a redirect happens.
     if (needRedirect) {
         return <Redirect href={needRedirect as any} />
     }
@@ -94,4 +91,3 @@ export const AppRoutingGate = ({ children }: { children: React.ReactNode; }) => 
     );
 
 }
-    ;

@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useContext, useEffect, useState} from 'react';
+import React, {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {Platform} from 'react-native';
 import Purchases, {CustomerInfo, MakePurchaseResult, PurchasesPackage,} from 'react-native-purchases';
 import {useSelector} from 'react-redux';
@@ -41,15 +41,16 @@ export const useRevenueCat = () => {
 
 export const RevenueCatProvider = ({children}: { children: React.ReactNode }) => {
 
-    const userPrimaryId = useSelector((state: any) => state.todos?.userPrimaryId);
+    const userPrimaryId = useSelector((state: any) => state.transactions?.userPrimaryId);
 
-    const [rcIsInitialized, setRcIsInitialized] = useState(false);
-    const [rcUserIdSyncedFor, setRcUserIdSyncedFor] = useState<string | null>(null);
+    const [rcIsInitializedFor, setRcIsInitializedFor] = useState<string | null>(null);
 
     const [rcUser, setRcUser] = useState<UserState>(USER_NO_SUBSCRIPTION);
     const [rcPackages, setRcPackages] = useState<PurchasesPackage[]>([]);
 
     const [isProcessing, setIsProcessing] = useState(false);
+
+    const hasConfiguredRef = useRef(false);
 
     // Update rcUser from CustomerInfo function
     const updateCustomerInformation = useCallback(async (customerInfo: CustomerInfo) => {
@@ -67,80 +68,78 @@ export const RevenueCatProvider = ({children}: { children: React.ReactNode }) =>
                     });
                 }
             } catch (e) {
-
+                console.error("RC updateCustomerInformation:", e);
             } finally {
                 const rcUserId = await Purchases.getAppUserID();
-                setRcUserIdSyncedFor(rcUserId);
+                setRcIsInitializedFor(rcUserId);
             }
         },
         []
     );
 
-    // Initialize SDK and fetch offerings
+    // RevenueCat is only needed once a userPrimaryId exists — that happens at
+    // the first onboarding step (CurrencyPage → loginOfflineUser) or after
+    // online sign-in. Before that, we're on /welcome / /sign-in / /sign-up,
+    // which never read RC state, so booting RC there is wasted work and risks
+    // a splash-stuck deadlock during App Review (sandbox StoreKit can hang).
     useEffect(() => {
+        if (!userPrimaryId) return;
+        // Drop any prior user's synced state so consumers don't read stale
+        // entitlements during a userPrimaryId change (e.g. anonymous → online
+        // sign-in where the server returns a different primary id).
+        setRcIsInitializedFor(null);
+        setRcUser(USER_NO_SUBSCRIPTION);
+        let cancelled = false;
         const init = async () => {
             try {
-                const apiKey = Platform.OS === 'ios' ? APIKeys.apple : APIKeys.google;
-                await Purchases.configure({apiKey});
                 Purchases.addCustomerInfoUpdateListener(updateCustomerInformation);
+                if (hasConfiguredRef.current) {
+                    const result = await Purchases.logIn(userPrimaryId);
+                    if (cancelled) return;
+                    if (result?.customerInfo) await updateCustomerInformation(result.customerInfo);
+                } else {
+                    const apiKey = Platform.OS === 'ios' ? APIKeys.apple : APIKeys.google;
+                    await Purchases.configure({apiKey, appUserID: userPrimaryId});
+                    hasConfiguredRef.current = true;
+                    const info = await Purchases.getCustomerInfo();
+                    if (cancelled) return;
+                    await updateCustomerInformation(info);
+                }
                 const offerings = await Purchases.getOfferings();
-                if (offerings.current) {
+                if (!cancelled && offerings.current) {
                     setRcPackages(offerings.current.availablePackages);
                 }
             } catch (e) {
                 console.error("RevenueCat init failed:", e);
-            } finally {
-                setRcIsInitialized(true);
+                // Unblock boot on failure (e.g. offline / sandbox quirk):
+                // stamp the app-user-id so rcIsLoaded can resolve.
+                try {
+                    const id = await Purchases.getAppUserID();
+                    if (!cancelled && id) setRcIsInitializedFor(id);
+                } catch {}
             }
         };
         init();
         return () => {
+            cancelled = true;
             Purchases.removeCustomerInfoUpdateListener(updateCustomerInformation);
         };
-    }, []);
-
-    // Any app user change immediately invalidates entitlements
-    useEffect(() => {
-        setRcUserIdSyncedFor(null);
     }, [userPrimaryId]);
 
-    // Sync user on login/logout
-    useEffect(() => {
-        if (!rcIsInitialized) return;
-        const syncUser = async () => {
-            try {
-                const rcUserId = await Purchases.getAppUserID();
-                // Logout
-                if (!userPrimaryId) {
-                    if (!rcUserId.startsWith('$RCAnonymousID')) {
-                        await Purchases.logOut();
-                    }
-                    return;
-                }
-                // Login
-                if (userPrimaryId !== rcUserId) {
-                    const result = await Purchases.logIn(userPrimaryId);
-                    if (result?.customerInfo) {
-                        // Fast entitlement sync
-                        updateCustomerInformation(result.customerInfo);
-                    }
-                }
-            } catch (e) {
-            }
-        };
-        syncUser();
-    }, [userPrimaryId, rcIsInitialized]);
+    // No userPrimaryId → RC isn't needed yet, so we're "loaded" by definition.
+    // Otherwise wait for the entitlement sync to settle on this user.
+    const rcIsLoaded = !userPrimaryId || rcIsInitializedFor === userPrimaryId;
 
     // Restore purchases function
     const rcRestorePurchases = async (): Promise<CustomerInfo | undefined> => {
-        if (!rcIsInitialized || isProcessing) return;
+        if (!rcIsLoaded || isProcessing) return;
         try {
             setIsProcessing(true);
             const info = await Purchases.restorePurchases();
             updateCustomerInformation(info); // optional, listener will also fire
             return info;
         } catch (e) {
-            //
+            console.error("RC restorePurchases:", e);
         } finally {
             setIsProcessing(false);
         }
@@ -148,7 +147,7 @@ export const RevenueCatProvider = ({children}: { children: React.ReactNode }) =>
 
     // Purchase package function
     const rcPurchasePackage = async (pack: PurchasesPackage): Promise<MakePurchaseResult | undefined> => {
-        if (!rcIsInitialized || isProcessing) return;
+        if (!rcIsLoaded || isProcessing) return;
         try {
             setIsProcessing(true);
             const purchaseInfo = await Purchases.purchasePackage(pack);
@@ -161,14 +160,6 @@ export const RevenueCatProvider = ({children}: { children: React.ReactNode }) =>
             setIsProcessing(false);
         }
     };
-
-    // if we dont have a userPrimaryId we dont care if we have the rc customerInfo updated
-    const rcIsLoaded =
-        rcIsInitialized &&
-        (
-            (userPrimaryId && rcUserIdSyncedFor === userPrimaryId) ||
-            (!userPrimaryId && rcUserIdSyncedFor?.startsWith('$RCAnonymousID'))
-        );
 
     // Expose context
     return (

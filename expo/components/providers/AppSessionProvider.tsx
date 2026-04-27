@@ -17,7 +17,6 @@ interface AppSessionContextType {
     isClerkSignedIn: boolean;
     isUserSignedIn: boolean;
     isUserOnlineSignedIn: boolean;
-    isAnonymousUser: boolean;
     userOnlineId: string | null;
     userPrimaryId: string | null;
     getToken: () => Promise<string | null>;
@@ -69,55 +68,61 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const {rcIsLoaded, rcUser, rcPackages, rcRestorePurchases, rcPurchasePackage} = useRevenueCat();
 
-    const userPrimaryId = useSelector(state => state.todos.userPrimaryId);
-    const userOnlineId = useSelector(state => state.todos.userOnlineId);
-    const [hasBooted, setHasBooted] = useState(false);
+    const userPrimaryId = useSelector(state => state.transactions.userPrimaryId);
+    const userOnlineId = useSelector(state => state.transactions.userOnlineId);
     const [isProcessing, setIsProcessing] = useState(false);
+
+    // Shared tail of every online sign-in/up/reset flow: pull token, fetch
+    // server config, dispatch the online-user redux action. Returns an error
+    // object on failure (caller should propagate), null on success. Pass
+    // emailAddress for password flows; SSO leaves it undefined and we decode
+    // it out of the Clerk token.
+    const finalizeOnlineLogin = async (emailAddress?: string) => {
+        const token = await getToken();
+        if (!token) {
+            await signOut();
+            return {error: "Internal Error: No token found."};
+        }
+        if (!emailAddress) {
+            const decoded = JSON.parse(atob(token.split('.')[1]));
+            emailAddress = decoded.eml;
+        }
+        const response = await fetchConfig({getToken, primaryId: userPrimaryId});
+        if (!response) {
+            await signOut();
+            return {error: "Failed to fetch user configuration."};
+        }
+        const {userPrimaryId: newPrimaryId, defaultCurrency} = response;
+        dispatch(loginOnlineUser(emailAddress, defaultCurrency, newPrimaryId));
+        return null;
+    };
 
     const doSignInFree = async ({defaultCurrency}: {defaultCurrency?: string} = {}) => {
         dispatch(loginOfflineUser(generateUUID(), defaultCurrency));
     }
 
     const doSignInSocial = async ({provider, redirectPath = "sso-callback"}: any) => {
-        if (!signInHook.isLoaded) return NOT_READY_ERR;
-        if (isProcessing) return;
+        if (!signInHook.isLoaded) return {error: NOT_READY_ERR};
+        if (isProcessing) return {};
         try {
             setIsProcessing(true);
-            const scheme = process.env.EXPO_APP_SCHEME || "appboiler";
             const redirectUrl = makeRedirectUri({
-                scheme,
+                scheme: "yamapp",
                 path: redirectPath,
             });
-            if (__DEV__) {
-                console.log("[SSO redirectUrl]", redirectUrl,
-                    "— register this URL in Clerk dashboard under Native applications / SSO redirect URIs if login fails.");
-            }
             const signInAttempt = await startSSOFlow({
                 strategy: provider,
                 redirectUrl
             });
             if (signInAttempt.createdSessionId) {
                 await signInHook.setActive({session: signInAttempt.createdSessionId});
-                const token = await getToken();
-                if (token) {
-                    const decoded = JSON.parse(atob(token.split('.')[1]));
-                    const emailAddress = decoded.eml;
-                    let response = await fetchConfig({getToken, primaryId: userPrimaryId});
-                    if (!response) {
-                        await signOut();
-                        return {error: "Failed to fetch user configuration."};
-                    }
-                    let {userPrimaryId: newPrimaryId, defaultCurrency} = response;
-                    dispatch(loginOnlineUser(emailAddress, defaultCurrency, newPrimaryId));
-                } else {
-                    await signOut();
-                    return {error: "Internal Error: No token found."};
-                }
-            } else {
-                return signInAttempt;
+                const err = await finalizeOnlineLogin();
+                if (err) return err;
+                return {};
             }
+            return {error: signInAttempt};
         } catch (err) {
-            return err;
+            return {error: err};
         } finally {
             setIsProcessing(false);
         }
@@ -142,7 +147,7 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const doSignInPass = async ({emailAddress, password}) => {
         if (!signInHook.isLoaded) return {error: NOT_READY_ERR};
-        if (isProcessing) return {error: "Processing"};
+        if (isProcessing) return {};
         try {
             setIsProcessing(true);
             const signInAttempt = await signInHook.signIn.create({
@@ -151,19 +156,8 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
             })
             if (signInAttempt.status === 'complete') {
                 await signInHook.setActive({session: signInAttempt.createdSessionId});
-                const token = await getToken();
-                if (token) {
-                    let response = await fetchConfig({getToken, primaryId: userPrimaryId});
-                    if (!response) {
-                        await signOut();
-                        return {error: "Failed to fetch user configuration."};
-                    }
-                    let {userPrimaryId: newPrimaryId, defaultCurrency} = response;
-                    dispatch(loginOnlineUser(emailAddress, defaultCurrency, newPrimaryId));
-                } else {
-                    await signOut();
-                    return {error: "Internal Error: No token found."};
-                }
+                const err = await finalizeOnlineLogin(emailAddress);
+                if (err) return err;
             }
             return {signInAttempt};
         } catch (err) {
@@ -190,26 +184,14 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const doSignUpVerify = async ({signUp, code, emailAddress}) => {
         if (!signUpHook.isLoaded) return {error: NOT_READY_ERR};
-        if (isProcessing) return {error: "Processing"};
+        if (isProcessing) return {};
         try {
             setIsProcessing(true);
             const signInAttempt = await signUp.attemptEmailAddressVerification({code})
             if (signInAttempt.status === 'complete') {
                 await signUpHook.setActive({session: signInAttempt.createdSessionId});
-                const token = await getToken();
-                if (token) {
-                    let response = await fetchConfig({getToken, primaryId: userPrimaryId});
-                    if (!response) {
-                        await signOut();
-                        return {error: "Failed to fetch user configuration."};
-                    }
-                    let {userPrimaryId: newPrimaryId, defaultCurrency} = response;
-                    dispatch(loginOnlineUser(emailAddress, defaultCurrency, newPrimaryId));
-                } else {
-                    await signOut();
-                    return {error: "Internal Error: No token found."};
-                }
-
+                const err = await finalizeOnlineLogin(emailAddress);
+                if (err) return err;
             }
             return {signInAttempt};
         } catch (err) {
@@ -234,7 +216,7 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const doPwdResetVerify = async ({signIn, code, password, emailAddress}) => {
         if (!signInHook.isLoaded) return {error: NOT_READY_ERR};
-        if (isProcessing) return {error: "Processing"};
+        if (isProcessing) return {};
         try {
             setIsProcessing(true);
             const signInAttempt = await signIn.attemptFirstFactor({
@@ -244,20 +226,8 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
             })
             if (signInAttempt.status === 'complete') {
                 await signInHook.setActive({session: signInAttempt.createdSessionId});
-                const token = await getToken();
-                if (token) {
-                    let response = await fetchConfig({getToken, primaryId: userPrimaryId});
-                    if (!response) {
-                        await signOut();
-                        return {error: "Failed to fetch user configuration."};
-                    }
-                    let {userPrimaryId: newPrimaryId, defaultCurrency} = response;
-                    dispatch(loginOnlineUser(emailAddress, defaultCurrency, newPrimaryId));
-                } else {
-                    await signOut();
-                    return {error: "Internal Error: No token found."};
-                }
-
+                const err = await finalizeOnlineLogin(emailAddress);
+                if (err) return err;
             }
             return {signInAttempt: signInAttempt};
         } catch (err) {
@@ -302,27 +272,21 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
     }, [isSignedIn, userOnlineId, isLoaded]);
 
 
-    useEffect(() => {
-        if (isLoaded && (rcIsLoaded || !userOnlineId)) {
-            SplashScreen.hideAsync();
-        }
-    }, [isLoaded, userOnlineId, rcIsLoaded]);
-
-    let isUserSignedIn = (isSignedIn && userOnlineId) || userPrimaryId;
-    let isUserOnlineSignedIn = isSignedIn && userOnlineId;
-    let isAnonymousUser = !!userPrimaryId;
-
-    let isClerkSignedIn = isSignedIn;
+    // Hold the splash and the rendered tree together until both auth and RC
+    // have settled, so consumers don't flicker through an unauthenticated /
+    // pre-entitlement frame on boot.
+    const hasBooted = isLoaded && rcIsLoaded;
 
     useEffect(() => {
-        if (isLoaded && rcIsLoaded && !hasBooted) {
-            setHasBooted(true);
-        }
-    }, [isLoaded, rcIsLoaded, hasBooted]);
+        if (hasBooted) SplashScreen.hideAsync();
+    }, [hasBooted]);
 
-    if (!hasBooted) {
-        return null;
-    }
+    if (!hasBooted) return null;
+
+    let isUserSignedIn = !!((isSignedIn && userOnlineId) || userPrimaryId);
+    let isUserOnlineSignedIn = !!(isSignedIn && userOnlineId);
+
+    let isClerkSignedIn = !!isSignedIn;
 
     let rcUserHasActiveSubscription = !!rcUser?.hasActiveSubscription || EXPO_PUBLIC_PRO_FOR_TESTING;
 
@@ -333,7 +297,6 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
                 isUserSignedIn,
                 isUserOnlineSignedIn,
-                isAnonymousUser,
 
                 userOnlineId,
                 userPrimaryId,

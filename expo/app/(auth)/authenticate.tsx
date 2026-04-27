@@ -129,7 +129,8 @@ export default function AuthenticatePage() {
 
             <View className="flex mb-4">
                 <SocialLogin onSocialLogin={async (provider) => {
-                    setError(await doSignInSocial({provider}));
+                    const {error} = await doSignInSocial({provider});
+                    setError(error);
                 }}/>
             </View>
 

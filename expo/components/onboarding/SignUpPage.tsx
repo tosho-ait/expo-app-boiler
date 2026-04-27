@@ -35,9 +35,9 @@ export default function SignUpPage({ onNext, onBack }: Props) {
                     <ErrorPanelText error={error} />
                     <SocialLogin
                         onSocialLogin={async (provider: any) => {
-                            const result: any = await doSignInSocial({ provider, redirectPath: "onboarding" });
-                            if (result) {
-                                const errMsg = result.errors?.[0]?.longMessage || result.errors?.[0]?.message || result.message || "An error occurred during sign in.";
+                            const {error} = await doSignInSocial({ provider, redirectPath: "onboarding" });
+                            if (error) {
+                                const errMsg = error.errors?.[0]?.longMessage || error.errors?.[0]?.message || error.message || "An error occurred during sign in.";
                                 setError(typeof errMsg === 'string' ? errMsg : "Sign in failed");
                             } else {
                                 setError(null);
