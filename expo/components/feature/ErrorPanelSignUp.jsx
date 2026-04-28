@@ -1,12 +1,15 @@
 import React from 'react';
 import ErrorPanelText from "../panels/ErrorPanelText";
+import { useT } from "@/i18n";
 
 
 function ErrorPanelSignIn({error}) {
 
+    const { t } = useT();
+
     if (error) {
 
-        let message = "Something went wrong.";
+        let message = t("errors.generic");
 
         if (error.errors?.at(0)?.longMessage) {
             message = error.errors?.at(0)?.longMessage;
@@ -16,35 +19,37 @@ function ErrorPanelSignIn({error}) {
         }
 
         if (error.code === "network_error") {
-            message = "You need an internet connection to sign up.";
+            message = t("errors.network");
         }
 
         if (error.message) {
             message = error.message;
         }
 
+        // Heuristic remap of Clerk's English error strings to localized variants.
+        // Clerk doesn't ship i18n; we match on the English prefix and replace.
         if (message.startsWith("Enter password")) {
-            message = "Password is required.";
+            message = t("errors.passwordRequired");
         }
 
         if (message.startsWith("Enter email")) {
-            message = "Email is required.";
+            message = t("errors.emailRequired");
         }
 
         if (message.startsWith("Email address must be ")) {
-            message = "Please enter a valid email address.";
+            message = t("errors.emailInvalid");
         }
 
         if (message.startsWith("Enter code")) {
-            message = "Verification code is required.";
+            message = t("errors.codeRequired");
         }
 
         if (message.startsWith("Incorrect code")) {
-            message = "Incorrect verification code.";
+            message = t("errors.codeIncorrect");
         }
 
         if (message.startsWith("Password is incorrect")) {
-            message = "Password is incorrect.";
+            message = t("errors.passwordIncorrect");
         }
 
         return <ErrorPanelText key="1" error={message}/>

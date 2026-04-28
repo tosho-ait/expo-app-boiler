@@ -54,13 +54,25 @@ export async function POST(request) {
             saved.todos.push(t.todoId);
         }
 
-        if (config?.defaultCurrency) {
-            await V2User.findOneAndUpdate(
-                { userOnlineId: userId },
-                { $set: { "config.defaultCurrency": config.defaultCurrency, updatedAt: new Date() } },
-                { upsert: true }
-            );
-            saved.config = true;
+        // Newer-wins config sync. Client always sends current config; we
+        // only overwrite if the incoming updatedAt is strictly newer than
+        // what we have stored. Lets multiple devices push without an older
+        // one clobbering a newer change.
+        if (config?.updatedAt) {
+            const incomingTs = new Date(config.updatedAt).getTime();
+            const existing = await V2User.findOne({ userOnlineId: userId }).select("config").lean();
+            const existingTs = existing?.config?.updatedAt
+                ? new Date(existing.config.updatedAt).getTime()
+                : 0;
+
+            if (incomingTs > existingTs) {
+                await V2User.findOneAndUpdate(
+                    { userOnlineId: userId },
+                    { $set: { config, updatedAt: new Date() } },
+                    { upsert: true }
+                );
+                saved.config = true;
+            }
         }
 
         return respondReturnJson({ serverTime: serverTime.getTime(), saved });

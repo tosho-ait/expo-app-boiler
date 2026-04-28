@@ -1,11 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { getIcon } from "../../lib/iconUtil";
+import { useT } from "@/i18n";
 
 
 function InfoPanel({ text, isCollapsible }) {
 
     const [expanded, setExpanded] = React.useState(false);
+    const { t } = useT();
 
     if (text && text.length) {
 
@@ -35,7 +37,7 @@ function InfoPanel({ text, isCollapsible }) {
                 {isCollapsible && !expanded && (
                     <Text onPress={() => setExpanded(true)}
                         className="text-gray-600 text-sm opacity-80 text-center font-medium mt-2">
-                        show full info
+                        {t("infoPanel.showFull")}
                     </Text>
                 )}
             </View>

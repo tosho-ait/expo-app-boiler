@@ -10,6 +10,7 @@ import { router } from "expo-router";
 import { setPurchaseIntent } from "@/redux/action";
 import { COLORS } from "@/lib/colors";
 import ProgressDots from "@/components/ui/ProgressDots";
+import { useT } from "@/i18n";
 
 interface Props {
     onBack?: () => void;
@@ -24,6 +25,7 @@ export default function SubscriptionPage({
 }: Props) {
     const { isUserOnlineSignedIn, rcPackages, rcRestorePurchases, rcUser, rcUserHasActiveSubscription } = useAppSession();
     const dispatch = useDispatch();
+    const { t } = useT();
 
     const yearlyProductId = process.env.EXPO_PUBLIC_RC_YEARLY_PRODUCT_ID;
     const yearlyPkg = rcPackages?.find((p: any) => p.product.identifier === yearlyProductId);
@@ -50,7 +52,7 @@ export default function SubscriptionPage({
     const buttons = isOnboarding ? (
         <View className="items-center w-full">
             {/* @ts-ignore */}
-            <Button link_pale title="Skip for Now" action={() => handleFinish && handleFinish()} testID="onboarding-skip" />
+            <Button link_pale title={t("common.skip")} action={() => handleFinish && handleFinish()} testID="onboarding-skip" />
         </View>
     ) : null;
 
@@ -71,14 +73,14 @@ export default function SubscriptionPage({
 
                     <View className="mb-6 items-center">
                         <Text className="text-4xl font-black text-center text-gray-900 leading-tight px-2">
-                            Unlock Pro
+                            {t("onboarding.subscription.title")}
                         </Text>
                     </View>
 
                     <View className="flex w-full mt-5 mb-2">
-                        {renderSubscriptionFeature("mc:cloud-sync", "Instant Cloud Sync & Backups", COLORS.BLUE_BG)}
-                        {renderSubscriptionFeature("fa:bar-chart", "Advanced features", COLORS.GREEN_BG)}
-                        {renderSubscriptionFeature("fa5:users", "Priority support", COLORS.PURPLE_BG)}
+                        {renderSubscriptionFeature("mc:cloud-sync", t("onboarding.subscription.feature1"), COLORS.BLUE_BG)}
+                        {renderSubscriptionFeature("fa:bar-chart", t("onboarding.subscription.feature2"), COLORS.GREEN_BG)}
+                        {renderSubscriptionFeature("fa5:users", t("onboarding.subscription.feature3"), COLORS.PURPLE_BG)}
                     </View>
 
                 </View>
@@ -86,7 +88,7 @@ export default function SubscriptionPage({
                 <View className="flex gap-1 items-center w-full mb-6">
                     {rcUserHasActiveSubscription ? (
                         <View className="w-full pb-4">
-                            <Button pill href={rcUser?.managementURL} title="Manage Your Subscription" />
+                            <Button pill href={rcUser?.managementURL} title={t("onboarding.subscription.manage")} />
                         </View>
                     ) : (
                         <>
@@ -94,15 +96,15 @@ export default function SubscriptionPage({
                                 <View className="mr-2">
                                     {getIcon("fa5:check", 16, "#4b5563")}
                                 </View>
-                                <Text className="text-sm font-semibold text-gray-600">No Payment Due Now</Text>
+                                <Text className="text-sm font-semibold text-gray-600">{t("onboarding.subscription.noPaymentDue")}</Text>
                             </View>
                             {/* @ts-ignore */}
-                            <Button pill title="Try for Free" action={handleSubscribe as any} />
+                            <Button pill title={t("onboarding.subscription.tryFree")} action={handleSubscribe as any} />
                             <Text className="text-sm font-medium text-gray-500 mt-2">
-                                Start with a 7-day Free Trial
+                                {t("onboarding.subscription.trialInfo")}
                             </Text>
                             <Text className="text-sm font-medium text-gray-500 mt-2">
-                                Just {priceString} per year (≈ {monthlyPriceString} /mo)
+                                {t("onboarding.subscription.priceInfo", { price: priceString, monthly: monthlyPriceString })}
                             </Text>
                         </>
                     )}
@@ -111,18 +113,18 @@ export default function SubscriptionPage({
                         <View className="mt-4">
                             {/* @ts-ignore */}
                             <Button link_pale
-                                title="Restore Subscription"
+                                title={t("onboarding.subscription.restore")}
                                 onPress={async () => {
                                     let result;
                                     try {
                                         result = await rcRestorePurchases();
                                     } catch (e) {
-                                        alert("No pro subscription found.");
+                                        alert(t("onboarding.subscription.notFound"));
                                     }
                                     if (!result?.activeSubscriptions?.length) {
-                                        alert("No pro subscription found.");
+                                        alert(t("onboarding.subscription.notFound"));
                                     } else {
-                                        alert("Subscription restored.");
+                                        alert(t("onboarding.subscription.restored"));
                                     }
                                 }} />
                         </View>

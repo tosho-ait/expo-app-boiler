@@ -1,37 +1,38 @@
-import React, { useState } from "react";
-import SettingsPanel from "@/components/feature/SettingsPanel";
-import Button from "@/components/ui/Button";
+import React from "react";
+import LanguagePanel from "@/components/feature/LanguagePanel";
 import { saveConfig } from "@/redux/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "expo-router";
 import PageSignature from "@/components/layout/PageSignature";
 import { View } from "react-native";
+import { DEFAULT_LANGUAGE, LanguageCode, useT } from "@/i18n";
 
 
 export default function EditSettingsScreen() {
 
     const router = useRouter();
     const dispatch = useDispatch();
-    const _defaultCurrency = useSelector((state: any) => state.todos.config?.defaultCurrency) || "USD";
-    let [defaultCurrency, setDefaultCurrency] = useState(_defaultCurrency);
+    const { t } = useT();
+
+    // Read & write through redux directly — no local state, no Save button.
+    // Picker change → dispatch → useT re-runs → page label flips immediately.
+    const language = (useSelector(
+        (state: any) => state.todos.config?.language
+    ) as LanguageCode | undefined) ?? DEFAULT_LANGUAGE;
+
+    const setLanguage = (lang: LanguageCode) => {
+        dispatch(saveConfig({ language: lang }));
+    };
 
     return (
         <PageSignature
-            heading="Settings"
+            heading={t("settings.title")}
             noBackButton={false}
-            onBack={() => router.back()}
-            buttons={
-                <Button pill
-                    title="Save"
-                    onPress={() => {
-                        dispatch(saveConfig({ defaultCurrency }));
-                        router.navigate('/config');
-                    }} />}>
+            onBack={() => router.back()}>
 
             <View className="p-4" />
 
-            <SettingsPanel defaultCurrency={defaultCurrency} setDefaultCurrency={setDefaultCurrency} showLegal={false}
-                hideCurrencyLabel={false} />
+            <LanguagePanel language={language} setLanguage={setLanguage} />
 
         </PageSignature>
     );

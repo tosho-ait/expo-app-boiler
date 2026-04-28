@@ -41,7 +41,7 @@ export const useRevenueCat = () => {
 
 export const RevenueCatProvider = ({children}: { children: React.ReactNode }) => {
 
-    const userPrimaryId = useSelector((state: any) => state.transactions?.userPrimaryId);
+    const userPrimaryId = useSelector((state: any) => state.todos?.userPrimaryId);
 
     const [rcIsInitializedFor, setRcIsInitializedFor] = useState<string | null>(null);
 
@@ -78,7 +78,7 @@ export const RevenueCatProvider = ({children}: { children: React.ReactNode }) =>
     );
 
     // RevenueCat is only needed once a userPrimaryId exists — that happens at
-    // the first onboarding step (CurrencyPage → loginOfflineUser) or after
+    // the first onboarding step (LanguagePage → loginOfflineUser) or after
     // online sign-in. Before that, we're on /welcome / /sign-in / /sign-up,
     // which never read RC state, so booting RC there is wasted work and risks
     // a splash-stuck deadlock during App Review (sandbox StoreKit can hang).

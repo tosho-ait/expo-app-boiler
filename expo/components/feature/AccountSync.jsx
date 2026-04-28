@@ -23,6 +23,7 @@ export default function AccountSync() {
     const { isUserOnlineSignedIn, getToken } = useAppSession();
 
     let pendingChanges = useSelector(state => state.todos.pendingChanges);
+    let config = useSelector(state => state.todos.config);
     let lastSyncAt = useSelector(state => state.todos.lastSyncAt) || 0;
 
     let dirtyTimestamp = useSelector(state => state.sync?.dirtyTimestamp);
@@ -84,7 +85,7 @@ export default function AccountSync() {
 
             (async () => {
                 let pushFailed = false;
-                await doV2Push({ pendingChanges, getToken, dispatch, onFail: () => { pushFailed = true; onFail(); } });
+                await doV2Push({ pendingChanges, config, getToken, dispatch, onFail: () => { pushFailed = true; onFail(); } });
                 if (!pushFailed) {
                     await doV2Pull({ lastSyncAt, getToken, dispatch, onFail });
                 }

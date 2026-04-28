@@ -4,6 +4,7 @@ import Button from "../ui/Button";
 import { useNavigation, useRouter } from "expo-router";
 import DeviceInfo from "react-native-device-info";
 import { COLORS } from "@/lib/colors";
+import { useT } from "@/i18n";
 
 
 const PageSignature = ({
@@ -18,6 +19,7 @@ const PageSignature = ({
 
     const router = useRouter();
     const navigation = useNavigation();
+    const { t } = useT();
 
     let classesContainer = "flex justify-between";
     let rootClasses = "flex-1 flex bg-white";
@@ -32,7 +34,7 @@ const PageSignature = ({
                 <View className="w-full pb-1 px-2 flex-row items-center justify-between">
                     <View className="w-20">
                         {!noBackButton &&
-                            <Button link_blue title="Back" icon="ii:chevron-back" testID="page-back" onPress={() => {
+                            <Button link_blue title={t("common.back")} icon="ii:chevron-back" testID="page-back" onPress={() => {
                                 if (onBack) {
                                     onBack();
                                 } else if (navigation.canGoBack()) {

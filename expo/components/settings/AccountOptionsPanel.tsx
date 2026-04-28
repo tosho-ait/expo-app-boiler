@@ -5,9 +5,11 @@ import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { useSelector } from "react-redux";
 import PanelDark from "../panels/PanelDark";
 import { useAppSession } from "../providers/AppSessionProvider";
+import { useT } from "@/i18n";
 
 export default function AccountOptionsPanel() {
     const { doSignOut, doEraseAccount, doLogoutWipeDevice, rcUser } = useAppSession();
+    const { t } = useT();
 
     let dirtyTimestamp = useSelector(state => state.sync?.dirtyTimestamp);
     let isDirty = !!dirtyTimestamp;
@@ -19,28 +21,14 @@ export default function AccountOptionsPanel() {
                     <LinkSection
                         onPress={doLogoutWipeDevice}
                         confirm={{
-                            title: "Erase Data",
-                            text: "Are you sure you want to permanently delete all data from this device?",
-                            buttonLabel: "Delete",
+                            title: t("settings.deleteDataConfirmTitle"),
+                            text: t("settings.deleteDataConfirmText"),
+                            buttonLabel: t("common.delete"),
                             extraConfirm: true
                         }}
-                        title="Delete Data"
-                        description="Erase all your data and reset the app."
+                        title={t("settings.deleteDataTitle")}
+                        description={t("settings.deleteDataDesc")}
                         icon="ii:trash-outline" />
-
-                    {/*<View className="px-4"><View className="h-px bg-white"/></View>*/}
-
-                    {/*<View className="py-2">*/}
-                    {/*    <Button link_muted*/}
-                    {/*             href="/authenticate"*/}
-                    {/*             confirm={{*/}
-                    {/*                 title: "Sign In",*/}
-                    {/*                 text: "Signing in with a different account will permanently delete all current data.",*/}
-                    {/*                 buttonLabel: "Continue"*/}
-                    {/*             }}*/}
-                    {/*             title="Already have a Pro account? Sign in"*/}
-                    {/*    />*/}
-                    {/*</View>*/}
                 </PanelDark>
             </SignedOut>
 
@@ -48,37 +36,37 @@ export default function AccountOptionsPanel() {
                 <PanelDark>
                     <LinkSection onPress={doEraseAccount}
                         confirm={{
-                            title: "Delete Account",
-                            text: "Are you sure you want to permanently delete your account and all data?",
-                            text2: "This action is irreversible!",
-                            buttonLabel: "Delete",
+                            title: t("settings.deleteAccountTitle"),
+                            text: t("settings.deleteAccountConfirm"),
+                            text2: t("settings.deleteAccountIrreversible"),
+                            buttonLabel: t("common.delete"),
                             extraConfirm: true
                         }}
-                        title="Delete Account"
-                        description="Erase all data and close your account."
+                        title={t("settings.deleteAccountTitle")}
+                        description={t("settings.deleteAccountDesc")}
                         icon="ii:trash-outline" />
 
                     <View className="px-4"><View className="h-px bg-white" /></View>
 
-                    {!isDirty && <LinkSection title="Sign Out"
-                        description="Sign out of your account."
+                    {!isDirty && <LinkSection title={t("settings.signOutTitle")}
+                        description={t("settings.signOutDesc")}
                         icon="ii:exit-outline"
                         onPress={doSignOut}
                         confirm={{
-                            title: "Sign Out",
-                            text: "Do you really want to sign out?",
-                            buttonLabel: "Sign Out"
+                            title: t("settings.signOutTitle"),
+                            text: t("settings.signOutConfirm"),
+                            buttonLabel: t("settings.signOutTitle")
                         }} />}
 
-                    {isDirty && <LinkSection title="Sign Out"
-                        description="Sign out of your account."
+                    {isDirty && <LinkSection title={t("settings.signOutTitle")}
+                        description={t("settings.signOutDesc")}
                         icon="ii:exit-outline"
                         onPress={doSignOut}
                         confirm={{
-                            title: "Sign Out",
-                            text: "You have unsynced records. If you sign out now, they will be permanently deleted.",
-                            text2: "Do you really want to sign out?",
-                            buttonLabel: "Sign Out"
+                            title: t("settings.signOutTitle"),
+                            text: t("settings.signOutDirtyConfirm"),
+                            text2: t("settings.signOutConfirm"),
+                            buttonLabel: t("settings.signOutTitle")
                         }} />}
 
                 </PanelDark>

@@ -6,7 +6,7 @@ import { router } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
 import { saveConfig } from "@/redux/action";
 
-import CurrencyPage from "@/components/onboarding/CurrencyPage";
+import LanguagePage from "@/components/onboarding/LanguagePage";
 import SurveyGoalPage from "@/components/onboarding/SurveyGoalPage";
 import SignUpPage from "@/components/onboarding/SignUpPage";
 import FeatureFavoritesPage from "@/components/onboarding/FeatureFavoritesPage";
@@ -19,12 +19,11 @@ export default function OnboardingScreen() {
     const { user } = useUser();
     const dispatch = useDispatch();
 
-    const [defaultCurrency, setDefaultCurrency] = useState();
     const [step, setStep] = useState(0);
     const [surveyGoal, setSurveyGoal] = useState<string | null>(null);
 
     const flow = [
-        'CURRENCY',
+        'LANGUAGE',
         'FEATURE_FAVORITES',
         'SURVEY_GOAL',
         'SIGN_UP',
@@ -58,9 +57,8 @@ export default function OnboardingScreen() {
 
     switch (currentStep) {
 
-        case 'CURRENCY':
-            return <CurrencyPage onNext={handleNext} onBack={handleBack}
-                defaultCurrency={defaultCurrency} setDefaultCurrency={setDefaultCurrency} />;
+        case 'LANGUAGE':
+            return <LanguagePage onNext={handleNext} onBack={handleBack} />;
 
         case 'SURVEY_GOAL':
             return <SurveyGoalPage onNext={handleNext} onBack={handleBack}

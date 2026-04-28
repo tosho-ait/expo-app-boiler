@@ -26,7 +26,7 @@ export async function GET(request) {
         if (v2user) {
             return respondReturnJson({
                 userPrimaryId: v2user.userPrimaryId,
-                defaultCurrency: v2user.config?.defaultCurrency || null,
+                language: v2user.config?.language || null,
             });
         }
 
@@ -59,7 +59,7 @@ export async function POST(request) {
         if (existing) {
             return respondReturnJson({
                 userPrimaryId: existing.userPrimaryId,
-                defaultCurrency: existing.config?.defaultCurrency || null,
+                language: existing.config?.language || null,
             });
         }
 
@@ -74,7 +74,7 @@ export async function POST(request) {
 
         return respondReturnJson({
             userPrimaryId: v2user.userPrimaryId,
-            defaultCurrency: v2user.config?.defaultCurrency || null,
+            language: v2user.config?.language || null,
         });
 
     } catch (error) {

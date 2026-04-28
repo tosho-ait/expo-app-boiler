@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {Text, View, Animated, TextInput} from 'react-native';
+import {useT} from "@/i18n";
 
 
 const InputStringPass = ({value, onChange, isDisabled, readOnly, label}) => {
 
     const [str, setStr] = useState(value);
     const [isFocused, setIsFocused] = useState(false);
+    const {t} = useT();
 
     // Animation state
     const animatedValue = React.useRef(new Animated.Value(value ? 1 : 0)).current;
@@ -41,7 +43,7 @@ const InputStringPass = ({value, onChange, isDisabled, readOnly, label}) => {
                 backgroundColor: 'white',
                 paddingHorizontal: 4,
             }}>
-                {label ? label : "Password"}
+                {label ? label : t("auth.password")}
             </Animated.Text>
 
             <View className="bg-white border border-gray-300 rounded-xl px-4 h-[50px] items-center flex-row">

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import InputString from "@/components/input/InputString";
@@ -9,11 +9,13 @@ import Button from "@/components/ui/Button";
 import ModalHeader from "@/components/ui/ModalHeader";
 import { saveTodo, deleteTodo } from "@/redux/action";
 import { generateUUID } from "@/lib/miscUtil";
+import { useT } from "@/i18n";
 
 
 export default function TodoEditScreen() {
     const dispatch = useDispatch();
     const { id } = useLocalSearchParams<{ id?: string }>();
+    const { t } = useT();
 
     const existing = useSelector(state => (state.todos.todoList || []).find(t => t.todoId === id));
 
@@ -42,13 +44,13 @@ export default function TodoEditScreen() {
     return (
         <View className="flex-1 bg-white">
             <ModalHeader
-                title={isNew ? "New Todo" : "Edit Todo"}
+                title={isNew ? t("todoEdit.newTodo") : t("todoEdit.editTodo")}
                 onClose={() => router.back()}
             />
             <ScrollView className="flex-1 px-5 pt-4">
                 <View className="gap-4">
                     <InputString
-                        label="Title"
+                        label={t("todoEdit.titleField")}
                         value={title}
                         onChange={setTitle}
                     />
@@ -61,18 +63,18 @@ export default function TodoEditScreen() {
                 <View className="mt-8 gap-3">
                     <Button
                         blue
-                        title="Save"
+                        title={t("common.save")}
                         isDisabled={!title.trim()}
                         onPress={onSave}
                     />
                     {!isNew && (
                         <Button
                             link
-                            title="Delete"
+                            title={t("common.delete")}
                             confirm={{
-                                title: "Delete Todo",
-                                text: "Are you sure?",
-                                buttonLabel: "Delete",
+                                title: t("todoEdit.deleteConfirmTitle"),
+                                text: t("todoEdit.deleteConfirmText"),
+                                buttonLabel: t("common.delete"),
                             }}
                             onPress={onDelete}
                         />

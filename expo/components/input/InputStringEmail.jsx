@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, Animated, TextInput } from 'react-native';
+import { useT } from "@/i18n";
 
 
 function sanitizeEmail(str) {
@@ -11,6 +12,7 @@ const InputStringEmail = ({ value, onChange, isDisabled, readOnly, bumpRight, on
 
     const [str, setStr] = useState(value);
     const [isFocused, setIsFocused] = useState(false);
+    const { t } = useT();
 
     // Animation state
     const animatedValue = React.useRef(new Animated.Value(value ? 1 : 0)).current;
@@ -46,7 +48,7 @@ const InputStringEmail = ({ value, onChange, isDisabled, readOnly, bumpRight, on
                 backgroundColor: 'white',
                 paddingHorizontal: 4,
             }}>
-                Email
+                {t("auth.email")}
             </Animated.Text>
 
             <View className="bg-white border border-gray-300 rounded-xl px-4 h-[50px] items-center flex-row">

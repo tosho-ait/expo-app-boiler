@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {Modal, Pressable, ScrollView, Text, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
+import {useT} from "@/i18n";
 
 export default function Select({value, onChange, options, className, label}) {
 
     const [visible, setVisible] = useState(false);
     const selectedOption = options.find(o => value && o.value === value);
+    const {t} = useT();
 
     return <View className={className}>
 
@@ -14,7 +16,7 @@ export default function Select({value, onChange, options, className, label}) {
         <Pressable
             onPress={() => setVisible(true)}
             className="flex-row items-center justify-between border border-gray-300 rounded px-3 h-12">
-            <Text className="text-base text-gray-900">{selectedOption?.label || selectedOption?.fullName || 'Select option'}</Text>
+            <Text className="text-base text-gray-900">{selectedOption?.label || selectedOption?.fullName || t("common.selectOption")}</Text>
             <Ionicons name="chevron-down" size={16} color="#a3a3a3"/>
         </Pressable>
 

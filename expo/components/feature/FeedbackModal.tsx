@@ -4,6 +4,7 @@ import Button from "../ui/Button";
 import BottomSheet from "@/components/ui/BottomSheet";
 import { fetchFeedback } from '@/lib/fetchUtil';
 import { useUser } from '@clerk/clerk-expo';
+import { useT } from "@/i18n";
 
 
 function FeedbackModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
@@ -11,6 +12,7 @@ function FeedbackModal({ visible, onClose }: { visible: boolean; onClose: () => 
     const [text, setText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { user } = useUser();
+    const { t } = useT();
 
     useEffect(() => {
         if (visible) {
@@ -21,7 +23,7 @@ function FeedbackModal({ visible, onClose }: { visible: boolean; onClose: () => 
 
     const handleSend = async () => {
         if (!text.trim()) {
-            Alert.alert("Error", "Please enter your feedback first.");
+            Alert.alert(t("feedback.error"), t("feedback.enterFirst"));
             return;
         }
 
@@ -35,30 +37,30 @@ function FeedbackModal({ visible, onClose }: { visible: boolean; onClose: () => 
             text,
             email,
             onSuccess: () => {
-                Alert.alert("Success", "Thank you for your feedback!");
+                Alert.alert(t("feedback.success"), t("feedback.thankYou"));
                 setText("");
                 setIsSubmitting(false);
                 onClose();
             },
             onFail: () => {
-                Alert.alert("Oops", "Something went wrong. Please try again.");
+                Alert.alert(t("feedback.oops"), t("feedback.somethingWrong"));
                 setIsSubmitting(false);
             }
         });
     };
 
     return (
-        <BottomSheet visible={visible} onClose={onClose} title="Leave Feedback" dismissKeyboardOnTap>
+        <BottomSheet visible={visible} onClose={onClose} title={t("feedback.title")} dismissKeyboardOnTap>
             <View className="p-6 gap-6 flex-1">
 
                 <Text className="text-lg text-gray-600">
-                    Share ideas, report bugs, or just say hello. We read every message.
+                    {t("feedback.description")}
                 </Text>
 
                 <TextInput
                     multiline
                     className="w-full h-[140px] border border-gray-300 rounded-lg p-3 text-xl text-gray-900 align-text-top"
-                    placeholder="Your feedback..."
+                    placeholder={t("feedback.placeholder")}
                     placeholderTextColor="#a3a3a3"
                     value={text}
                     onChangeText={setText}
@@ -69,7 +71,7 @@ function FeedbackModal({ visible, onClose }: { visible: boolean; onClose: () => 
                 <View className="flex-row justify-end">
                     <Button
                         blue
-                        title={isSubmitting ? "Sending..." : "Send Feedback"}
+                        title={isSubmitting ? t("feedback.sending") : t("feedback.send")}
                         isDisabled={isSubmitting}
                         onPress={handleSend}
                     />

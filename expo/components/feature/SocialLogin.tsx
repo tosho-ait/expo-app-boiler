@@ -2,6 +2,7 @@ import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import Svg, {Path} from 'react-native-svg'
+import {useT} from "@/i18n";
 
 const GoogleIcon = ({size = 20}) => (
     <Svg width={size} height={size} viewBox="0 0 533.5 544.3">
@@ -18,21 +19,17 @@ const GoogleIcon = ({size = 20}) => (
 
 export default function SocialLogin({onSocialLogin}) {
 
+    const {t} = useT();
+
     return (
         <View key="6" className="flex gap-3">
-
-            {/*<View key="9" className="px-16 flex-row items-center gap-3">*/}
-            {/*    <View className="flex-1 h-px bg-gray-400"/>*/}
-            {/*    <Text className="mx-2 text-gray-400">or</Text>*/}
-            {/*    <View className="flex-1 h-px bg-gray-400"/>*/}
-            {/*</View>*/}
 
             <TouchableOpacity
                 onPress={() => onSocialLogin("oauth_google")}
                 className="flex-row gap-2 items-center justify-center w-full py-3 mt-4 bg-white border border-gray-400 rounded-full active:opacity-70">
                 <GoogleIcon size={20}/>
                 <Text className="ml-2 text-base font-semibold text-gray-700">
-                    Sign In with Google
+                    {t("auth.signInWithGoogle")}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -40,7 +37,7 @@ export default function SocialLogin({onSocialLogin}) {
                 className="flex-row gap-2 items-center justify-center w-full py-3 mt-4 bg-white border border-gray-400 rounded-full active:opacity-70">
                 <AntDesign name="apple1" size={21}/>
                 <Text className="ml-2 text-base font-semibold text-gray-700">
-                    Sign In with Apple
+                    {t("auth.signInWithApple")}
                 </Text>
             </TouchableOpacity>
         </View>

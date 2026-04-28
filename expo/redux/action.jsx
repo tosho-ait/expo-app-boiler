@@ -30,14 +30,14 @@ export const logoutWipeDevice = () => ({
     payload: {}
 });
 
-export const loginOfflineUser = (userId, defaultCurrency) => ({
+export const loginOfflineUser = (userId, language) => ({
     type: LOGIN_OFFLINE_USER,
-    payload: { userId, defaultCurrency }
+    payload: { userId, language }
 });
 
-export const loginOnlineUser = (userId, defaultCurrency, userPrimaryId) => ({
+export const loginOnlineUser = (userId, language, userPrimaryId) => ({
     type: LOGIN_ONLINE_USER,
-    payload: { userId, defaultCurrency, userPrimaryId }
+    payload: { userId, language, userPrimaryId }
 });
 
 export const syncTryTimestamp = (timestamp) => ({

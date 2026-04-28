@@ -40,16 +40,19 @@ const initialState = {
     userOnlineId: null,
     userOnlineIdLastLogin: null,
 
+    // config is sent on every push; conflict resolution happens via
+    // config.updatedAt on the server (newer wins).
     config: {
-        defaultCurrency: null,
+        language: null,
+        updatedAt: null,
     },
 
     // raw records
     todoList: [],
 
+    // Only todos use pendingChanges — config rides along on every push.
     pendingChanges: {
         todos: [],
-        config: null,
     },
     lastSyncAt: 0,
 
@@ -86,7 +89,7 @@ const todosReducer = (state = initialState, action) => {
             userPrimaryId,
         } = state;
 
-        let pendingChanges = state.pendingChanges || { todos: [], config: null };
+        let pendingChanges = state.pendingChanges || { todos: [] };
         if (!pendingChanges.todos) pendingChanges = { ...pendingChanges, todos: [] };
 
         switch (action.type) {
@@ -131,9 +134,13 @@ const todosReducer = (state = initialState, action) => {
             }
 
             case V2_SAVE_CONFIG: {
-                const newConfig = { ...config, ...action.payload };
-                pendingChanges = { ...pendingChanges, config: newConfig };
-                return { ...state, config: newConfig, pendingChanges };
+                // Bump updatedAt so the server can pick newer-wins on push.
+                const newConfig = {
+                    ...config,
+                    ...action.payload,
+                    updatedAt: new Date().toISOString(),
+                };
+                return { ...state, config: newConfig };
             }
 
             case V2_SYNC_PULL_COMPLETE: {
@@ -158,13 +165,14 @@ const todosReducer = (state = initialState, action) => {
                 const pulledTodoIds = new Set(remoteTodos.map(t => t.todoId));
                 const newPendingChanges = {
                     todos: (pendingChanges.todos || []).filter(p => !pulledTodoIds.has(p.todoId)),
-                    config: (remoteConfig?.defaultCurrency && pendingChanges.config?.defaultCurrency === remoteConfig.defaultCurrency)
-                        ? null
-                        : pendingChanges.config,
                 };
 
-                const newConfig = remoteConfig?.defaultCurrency
-                    ? { ...config, defaultCurrency: remoteConfig.defaultCurrency }
+                // Newer-wins via updatedAt. If the remote has no updatedAt
+                // (legacy / fresh user) we keep whatever we have locally.
+                const localTs = config?.updatedAt ? new Date(config.updatedAt).getTime() : 0;
+                const remoteTs = remoteConfig?.updatedAt ? new Date(remoteConfig.updatedAt).getTime() : 0;
+                const newConfig = remoteConfig && remoteTs > localTs
+                    ? { ...config, ...remoteConfig }
                     : config;
 
                 return {
@@ -179,13 +187,12 @@ const todosReducer = (state = initialState, action) => {
             }
 
             case V2_SYNC_PUSH_COMPLETE: {
-                const { todos: savedTodos = [], config: configSaved = false } = action.payload || {};
+                const { todos: savedTodos = [] } = action.payload || {};
                 const savedSet = new Set(savedTodos);
                 return {
                     ...state,
                     pendingChanges: {
                         todos: (pendingChanges.todos || []).filter(p => !savedSet.has(p.todoId)),
-                        config: configSaved ? null : pendingChanges.config,
                     },
                 };
             }
@@ -203,17 +210,21 @@ const todosReducer = (state = initialState, action) => {
             }
 
             case LOGIN_OFFLINE_USER: {
-                const { userId, defaultCurrency: loginCurrency } = action.payload;
+                const { userId, language: loginLanguage } = action.payload;
+                // Carry the language picked in onboarding into post-reset state,
+                // and stamp updatedAt so the next push wins on the server.
                 return {
                     ...initialState,
                     userPrimaryId: userId,
                     userOnlineId: null,
-                    config: loginCurrency ? { ...initialState.config, defaultCurrency: loginCurrency } : initialState.config,
+                    config: loginLanguage
+                        ? { ...initialState.config, language: loginLanguage, updatedAt: new Date().toISOString() }
+                        : initialState.config,
                 };
             }
 
             case LOGIN_ONLINE_USER: {
-                let { userId, userPrimaryId: payloadPrimaryId, defaultCurrency: loginCurrency } = action.payload;
+                let { userId, userPrimaryId: payloadPrimaryId, language: loginLanguage } = action.payload;
                 userId = userId?.toLowerCase();
                 const newPrimaryId = payloadPrimaryId || state.userPrimaryId || generateUUID();
 
@@ -227,8 +238,8 @@ const todosReducer = (state = initialState, action) => {
                     userPrimaryId: newPrimaryId,
                     userOnlineId: userId,
                     userOnlineIdLastLogin: userId,
-                    config: loginCurrency
-                        ? { ...stateForLogin.config, defaultCurrency: loginCurrency }
+                    config: loginLanguage
+                        ? { ...stateForLogin.config, language: loginLanguage, updatedAt: new Date().toISOString() }
                         : stateForLogin.config,
                 };
             }

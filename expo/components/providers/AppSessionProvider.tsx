@@ -68,8 +68,8 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const {rcIsLoaded, rcUser, rcPackages, rcRestorePurchases, rcPurchasePackage} = useRevenueCat();
 
-    const userPrimaryId = useSelector(state => state.transactions.userPrimaryId);
-    const userOnlineId = useSelector(state => state.transactions.userOnlineId);
+    const userPrimaryId = useSelector(state => state.todos.userPrimaryId);
+    const userOnlineId = useSelector(state => state.todos.userOnlineId);
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Shared tail of every online sign-in/up/reset flow: pull token, fetch
@@ -92,13 +92,13 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
             await signOut();
             return {error: "Failed to fetch user configuration."};
         }
-        const {userPrimaryId: newPrimaryId, defaultCurrency} = response;
-        dispatch(loginOnlineUser(emailAddress, defaultCurrency, newPrimaryId));
+        const {userPrimaryId: newPrimaryId, language} = response;
+        dispatch(loginOnlineUser(emailAddress, language, newPrimaryId));
         return null;
     };
 
-    const doSignInFree = async ({defaultCurrency}: {defaultCurrency?: string} = {}) => {
-        dispatch(loginOfflineUser(generateUUID(), defaultCurrency));
+    const doSignInFree = async ({language}: {language?: string} = {}) => {
+        dispatch(loginOfflineUser(generateUUID(), language));
     }
 
     const doSignInSocial = async ({provider, redirectPath = "sso-callback"}: any) => {

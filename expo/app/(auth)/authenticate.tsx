@@ -8,6 +8,7 @@ import InputString from "@/components/input/InputString";
 import {useAppSession} from "@/components/providers/AppSessionProvider";
 import SocialLogin from "@/components/feature/SocialLogin";
 import ErrorPanelSignUp from "@/components/feature/ErrorPanelSignUp";
+import {useT} from "@/i18n";
 
 
 const STATE_START = "START";
@@ -29,6 +30,8 @@ export default function AuthenticatePage() {
         doPwdResetVerify
     } = useAppSession();
 
+    const {t} = useT();
+
     const [viewState, setViewState] = useState(STATE_START);
 
     const [emailAddress, setEmailAddress] = useState('');
@@ -45,7 +48,7 @@ export default function AuthenticatePage() {
         setError(null);
 
         if (!emailAddress) {
-            setError({message: "Please enter an email address."});
+            setError({message: t("auth.enterEmailFirst")});
             return;
         }
 
@@ -112,18 +115,18 @@ export default function AuthenticatePage() {
     const renderStart = () => (
         <View key="start" className="flex gap-6">
 
-            <Text className="text-5xl font-black text-left text-gray-900 leading-tight mb-4">Sign In</Text>
+            <Text className="text-5xl font-black text-left text-gray-900 leading-tight mb-4">{t("auth.signIn")}</Text>
 
             <InputStringEmail
                 onChange={(val) => setEmailAddress(val)}
                 value={emailAddress}
             />
 
-            <Button pill title="Continue" onPress={handleContinueEmail}/>
+            <Button pill title={t("common.continue")} onPress={handleContinueEmail}/>
 
             <View className="flex-row items-center gap-4 px-6 ">
                 <View className="h-[1px] bg-gray-300 flex-1"/>
-                <Text className="text-gray-500 font-semibold">or</Text>
+                <Text className="text-gray-500 font-semibold">{t("common.or")}</Text>
                 <View className="h-[1px] bg-gray-300 flex-1"/>
             </View>
 
@@ -141,16 +144,16 @@ export default function AuthenticatePage() {
         <View key="pass" className="flex gap-6">
 
             <Text className="text-4xl font-extrabold text-left text-gray-900 leading-tight mb-4">
-                Welcome Back</Text>
+                {t("auth.welcomeBack")}</Text>
 
             <InputStringEmail onChange={() => setViewState(STATE_START)} value={emailAddress}/>
 
             <InputStringPass onChange={(val) => setPassword(val)} value={password}/>
 
-            <Button pill title="Sign In" onPress={handleSignIn}/>
+            <Button pill title={t("auth.signIn")} onPress={handleSignIn}/>
 
             <View className="items-center">
-                <Button link_pale title="Forgot Password?" onPress={handleForgot}/>
+                <Button link_pale title={t("auth.forgotPassword")} onPress={handleForgot}/>
             </View>
 
         </View>
@@ -160,27 +163,27 @@ export default function AuthenticatePage() {
         <View key="signup" className="flex gap-6">
 
             <Text className="text-4xl font-extrabold text-left text-gray-900 leading-tight mb-4">
-                Create Account</Text>
+                {t("auth.createAccount")}</Text>
 
             <InputStringEmail onChange={() => setViewState(STATE_START)} value={emailAddress}/>
 
-            <InputString label="Name" onChange={(val) => setName(val)} value={name}/>
+            <InputString label={t("auth.name")} onChange={(val) => setName(val)} value={name}/>
 
             <InputStringPass onChange={(val) => setPassword(val)} value={password}/>
 
-            <Button pill title="Sign Up" onPress={handleSignUp}/>
+            <Button pill title={t("auth.signUp")} onPress={handleSignUp}/>
 
             <View className="flex mt-4">
                 <Text className="text-sm text-gray-500 text-center">
-                    By continuing, you agree to our</Text>
+                    {t("auth.termsAgree")}</Text>
                 <Text className="text-sm text-gray-500 text-center">
                     <Text className="font-semibold underline"
                           onPress={() => Linking.openURL('/terms-of-service')}>
-                        Terms of Service
-                    </Text>{' '}and{' '}
+                        {t("auth.termsOfService")}
+                    </Text>{' '}{t("common.and")}{' '}
                     <Text className="font-semibold underline"
                           onPress={() => Linking.openURL('/privacy-policy')}>
-                        Privacy Policy
+                        {t("auth.privacyPolicy")}
                     </Text>.
                 </Text>
             </View>
@@ -191,20 +194,20 @@ export default function AuthenticatePage() {
         <View key="verify" className="flex gap-6">
 
             <Text className="text-4xl font-extrabold text-left text-gray-900 leading-tight mb-4">
-                Verify Email</Text>
+                {t("auth.verifyEmail")}</Text>
 
             <View className="flex gap-0 mb-2">
                 <Text className="px-6 text-center text-lg text-gray-700">
-                    We sent a confirmation code to your email.</Text>
+                    {t("auth.verificationSent")}</Text>
                 <Text className="px-6 text-center text-lg text-gray-700">
-                    Enter it below to verify your account.</Text>
+                    {t("auth.verificationEnter")}</Text>
             </View>
 
-            <InputString label="Verification Code"
+            <InputString label={t("auth.verificationCode")}
                          onChange={(val) => setCode(val)}
                          value={code}/>
 
-            <Button pill title="Verify" onPress={handleVerify}/>
+            <Button pill title={t("auth.verify")} onPress={handleVerify}/>
 
         </View>
     );
@@ -213,12 +216,12 @@ export default function AuthenticatePage() {
         <View key="resetprep" className="flex gap-6">
 
             <Text className="text-4xl font-extrabold text-left text-gray-900 leading-tight mb-4">
-                Reset Password</Text>
+                {t("auth.resetPassword")}</Text>
 
             <Text className="mb-2 px-6 text-center text-lg text-gray-700">
-                We’ll send a verification code to {emailAddress} so you can reset your password.</Text>
+                {t("auth.resetInfo", {email: emailAddress})}</Text>
 
-            <Button pill title="Send Code" onPress={handleResetPrepare}/>
+            <Button pill title={t("auth.sendCode")} onPress={handleResetPrepare}/>
 
         </View>
     );
@@ -227,20 +230,20 @@ export default function AuthenticatePage() {
         <View key="resetver" className="flex gap-6">
 
             <Text className="text-4xl font-extrabold text-left text-gray-900 leading-tight mb-4">
-                New Password</Text>
+                {t("auth.newPassword")}</Text>
 
             <Text className="mb-2 px-6 text-center text-lg text-gray-700">
-                Enter the reset code you received and choose a new password.</Text>
+                {t("auth.resetVerifyInfo")}</Text>
 
-            <InputString label="Reset Code"
+            <InputString label={t("auth.resetCode")}
                          onChange={(val) => setCode(val)}
                          value={code}/>
 
-            <InputStringPass label="New Password"
+            <InputStringPass label={t("auth.newPassword")}
                              onChange={(val) => setPassword(val)}
                              value={password}/>
 
-            <Button pill title="Set Password" onPress={handleResetVerify}/>
+            <Button pill title={t("auth.setPassword")} onPress={handleResetVerify}/>
 
         </View>
     );

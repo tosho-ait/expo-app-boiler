@@ -40,17 +40,20 @@ export async function fetchConfig({ getToken, primaryId }) {
     }
 }
 
-export async function doV2Push({ pendingChanges, getToken, dispatch, onFail }) {
-    const { todos = [], config } = pendingChanges || {};
-    const hasPending = todos.length > 0 || config;
-    if (!hasPending) return;
+export async function doV2Push({ pendingChanges, config, getToken, dispatch, onFail }) {
+    const { todos = [] } = pendingChanges || {};
+    // Config is sent on every push that has anything to send. The server
+    // resolves conflicts by comparing config.updatedAt — newer wins, older
+    // is silently ignored.
+    const hasConfig = !!config?.updatedAt;
+    if (todos.length === 0 && !hasConfig) return;
 
     try {
         const token = await getToken();
 
         const body = {
             todos,
-            config: config?.defaultCurrency ? { defaultCurrency: config.defaultCurrency } : null,
+            config: hasConfig ? config : null,
         };
 
         const response = await axios.post(API_URL + "/api/v2/sync/push", body, {

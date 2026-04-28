@@ -6,6 +6,7 @@ import { setPurchaseIntent } from "../../redux/action";
 import PageSignature from "@/components/layout/PageSignature";
 import Button from "@/components/ui/Button";
 import { router } from "expo-router";
+import { useT } from "@/i18n";
 
 
 export default function ProcessPurchase() {
@@ -13,6 +14,7 @@ export default function ProcessPurchase() {
     const dispatch = useDispatch();
     const purchaseIntent = useSelector(state => state.purchase.intent);
     const { rcPurchasePackage, userOnlineId, rcUser } = useAppSession();
+    const { t } = useT();
     const [error, setError] = useState(false);
 
     useEffect(() => {
@@ -40,9 +42,9 @@ export default function ProcessPurchase() {
             <PageSignature>
                 <View className="flex-1 justify-center items-center bg-white">
                     <Text className="text-lg font-bold text-gray-700 mt-4 mb-6">
-                        Could not complete the purchase.
+                        {t("processPurchase.failed")}
                     </Text>
-                    <Button pill title="Go Back" onPress={() => router.replace("/get-subscription")} />
+                    <Button pill title={t("processPurchase.goBack")} onPress={() => router.replace("/get-subscription")} />
                 </View>
             </PageSignature>
         );
@@ -52,7 +54,7 @@ export default function ProcessPurchase() {
         <PageSignature>
             <View className="flex-1 justify-center items-center bg-white">
                 <Text className="text-lg font-bold text-gray-700 mt-4">
-                    Completing your subscription...
+                    {t("processPurchase.completing")}
                 </Text>
             </View>
         </PageSignature>

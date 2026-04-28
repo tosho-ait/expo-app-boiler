@@ -7,11 +7,13 @@ import { timestampToDisplayDate } from "../../lib/dateUtil";
 import PanelDark from "../panels/PanelDark";
 import { getIcon } from "../../lib/iconUtil";
 import { useAppSession } from "@/components/providers/AppSessionProvider";
+import { useT } from "@/i18n";
 
 
 export default function SyncPanel() {
 
     const { rcUserHasActiveSubscription } = useAppSession();
+    const { t } = useT();
 
     let lastSync = useSelector(
         state => state.sync?.lastSyncSuccessTimestamp);
@@ -27,14 +29,14 @@ export default function SyncPanel() {
                         </View>
 
                         <Text className="text-md text-zinc-600 text-center w-full">
-                            Last cloud sync completed at</Text>
+                            {t("settings.syncedAt")}</Text>
 
                         <Text className="text-lg mt-2 font-semibold">
                             {timestampToDisplayDate(lastSync)}</Text>
 
                         {!rcUserHasActiveSubscription &&
                             <Text className="text-sm text-zinc-600 text-center w-full mt-3">
-                                Upgrade to Pro for instant cloud sync.
+                                {t("settings.syncUpgrade")}
                             </Text>}
                     </View>
                 </PanelDark>
@@ -49,9 +51,9 @@ export default function SyncPanel() {
                                 {getIcon("ii:cloud-offline-outline", 36, "black")}
                             </View>
                             <Text className="text-xl font-semibold text-center w-full">
-                                Cloud Sync Offline</Text>
+                                {t("settings.syncOfflineTitle")}</Text>
                             <Text className="text-md text-zinc-600 text-center w-full mt-1">
-                                Sign up for free to automatically backup and sync your data securely.
+                                {t("settings.syncOfflineDesc")}
                             </Text>
                         </View>
                     } />

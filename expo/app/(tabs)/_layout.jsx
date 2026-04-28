@@ -8,10 +8,12 @@ import { AppRoutingGate } from "@/components/providers/AppRoutingGate";
 import { AntDesign } from "@expo/vector-icons";
 import { COLORS } from "@/lib/colors";
 import DashboardTutorial from "@/components/feature/DashboardTutorial";
+import { useT } from "@/i18n";
 
 
 export default function TabLayout() {
     const pathname = usePathname();
+    const { t } = useT();
 
     return (
         <AppRoutingGate instance="tabs">
@@ -30,7 +32,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="index"
                     options={{
-                        title: 'Dashboard',
+                        title: t("tabs.dashboard"),
                         tabBarTestID: 'tab-dashboard',
                         tabBarIcon: ({ color }) => getIcon("ii:list-outline", 24, color)
                     }}
@@ -38,7 +40,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="showcase"
                     options={{
-                        title: 'Showcase',
+                        title: t("tabs.showcase"),
                         tabBarTestID: 'tab-showcase',
                         tabBarIcon: ({ color }) => getIcon("ii:color-palette-outline", 24, color)
                     }}
@@ -46,7 +48,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="config"
                     options={{
-                        title: 'Settings',
+                        title: t("tabs.settings"),
                         tabBarTestID: 'tab-settings',
                         tabBarIcon: ({ color }) => getIcon("ii:settings-outline", 24, color)
                     }}

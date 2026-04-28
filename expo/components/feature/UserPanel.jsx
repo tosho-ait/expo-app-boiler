@@ -6,15 +6,16 @@ import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppSession } from "@/components/providers/AppSessionProvider";
 import PanelFullWhite from "@/components/panels/PanelFullWhite";
+import { useT } from "@/i18n";
 
 
-function resolveCurrentUserDetails({ clerkUser }) {
+function resolveCurrentUserDetails({ clerkUser, anonymousLabel }) {
     const primaryEmail = clerkUser?.primaryEmailAddress?.emailAddress
         || clerkUser?.emailAddresses?.[0]?.emailAddress
         || "";
     const fullName = clerkUser?.fullName || clerkUser?.firstName || "";
     return {
-        label: fullName || primaryEmail || "Anonymous",
+        label: fullName || primaryEmail || anonymousLabel,
         imageUrl: clerkUser?.imageUrl || null,
     };
 }
@@ -23,6 +24,7 @@ function resolveCurrentUserDetails({ clerkUser }) {
 export default function UserPanel({ }) {
 
     const { clerkUser } = useAppSession();
+    const { t } = useT();
 
     const [isEditingName, setIsEditingName] = useState(false);
     const [newName, setNewName] = useState("");
@@ -38,7 +40,7 @@ export default function UserPanel({ }) {
             await clerkUser?.update({ firstName, lastName });
             setIsEditingName(false);
         } catch (err) {
-            alert(err?.errors?.[0]?.message || "Error updating name");
+            alert(err?.errors?.[0]?.message || t("userPanel.errorUpdatingName"));
         } finally {
             setIsSavingName(false);
         }
@@ -64,7 +66,7 @@ export default function UserPanel({ }) {
         }
     }
 
-    const details = resolveCurrentUserDetails({ clerkUser });
+    const details = resolveCurrentUserDetails({ clerkUser, anonymousLabel: t("userPanel.anonymous") });
 
     return <PanelFullWhite>
         <SignedIn>
@@ -133,10 +135,10 @@ export default function UserPanel({ }) {
                     </View>
                 </View>
 
-                <Text className="text-2xl font-semibold text-gray-800 pt-4 text-center">Anonymous User</Text>
+                <Text className="text-2xl font-semibold text-gray-800 pt-4 text-center">{t("userPanel.anonymous")}</Text>
 
                 <View className="w-full max-w-[250px] pt-2">
-                    <Button title="Sign Up for Free" href="/authenticate" />
+                    <Button title={t("userPanel.signUpFree")} href="/authenticate" />
                 </View>
 
             </View>

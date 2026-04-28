@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import PageSignature from "@/components/layout/PageSignature";
 import { COLORS } from "@/lib/colors";
 import { ScreenLayout } from "./Shared";
+import { useT } from "@/i18n";
 
 interface Props {
     onNext: () => void;
@@ -11,10 +12,11 @@ interface Props {
 }
 
 export default function WelcomePage({ onNext, onLogin }: Props) {
+    const { t } = useT();
     const buttons = (
         <View className="flex gap-4">
-            <Button pill title="Get Started" action={onNext} testID="welcome-get-started" />
-            <Button link_pale title="Already have an account?" action={onLogin} />
+            <Button pill title={t("welcome.getStarted")} action={onNext} testID="welcome-get-started" />
+            <Button link_pale title={t("welcome.alreadyHaveAccount")} action={onLogin} />
         </View>
     );
 
@@ -26,7 +28,7 @@ export default function WelcomePage({ onNext, onLogin }: Props) {
                         App<Text className={COLORS.BLUE_TEXT}>Boiler</Text>
                     </Text>
                     <Text className="mt-5 text-xl text-gray-500 font-medium text-center px-4">
-                        Your app starts here.
+                        {t("welcome.tagline")}
                     </Text>
                 </View>
             </ScreenLayout>

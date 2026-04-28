@@ -5,15 +5,17 @@ import Button from "@/components/ui/Button";
 import FeedbackModal from "@/components/feature/FeedbackModal";
 import * as Application from "expo-application";
 import { COLORS } from "@/lib/colors";
+import { useT } from "@/i18n";
 
 
 export default function AboutPage() {
 
     const appVersion = Application.nativeApplicationVersion;
     const [showFeedback, setShowFeedback] = useState(false);
+    const { t } = useT();
 
     return (
-        <PageSignature heading="About">
+        <PageSignature heading={t("about.title")}>
 
             <View className="flex gap-6">
 
@@ -29,21 +31,21 @@ export default function AboutPage() {
                             App<Text className={COLORS.BLUE_TEXT}>Boiler</Text>
                         </Text>
                         <Text className="text-lg text-gray-500 mt-1">
-                            Your app starts here.
+                            {t("welcome.tagline")}
                         </Text>
                     </View>
                 </View>
 
                 <Text key="1" className="text-lg text-gray-700 leading-relaxed">
-                    AppBoiler is a starter template for building cross-platform apps with an Expo mobile client, a Next.js backend, and shared business logic.
+                    {t("about.description")}
                 </Text>
 
                 <View key="5" className="flex-row items-center justify-center mb-6 gap-3">
-                    <Button link_blue title="Leave Feedback" onPress={() => setShowFeedback(true)} />
+                    <Button link_blue title={t("about.leaveFeedback")} onPress={() => setShowFeedback(true)} />
                 </View>
 
                 <View key="7" className="flex-row items-center justify-center gap-3 mb-8">
-                    <Text className="text-gray-400 text-sm">version {appVersion}</Text>
+                    <Text className="text-gray-400 text-sm">{t("about.version", { version: appVersion })}</Text>
                 </View>
 
             </View>

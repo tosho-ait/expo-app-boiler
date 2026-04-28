@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveConfig } from '@/redux/action';
+import { useT } from "@/i18n";
 
 interface TutorialStep {
-    text: string;
+    textKey: string;
     position: 'bottom-right';
     pointerSide: 'bottom';
     pointerAlign: 'right';
@@ -12,7 +13,7 @@ interface TutorialStep {
 
 const steps: TutorialStep[] = [
     {
-        text: 'Tap to add your\nfirst todo',
+        textKey: 'dashboard.tutorialTap',
         position: 'bottom-right',
         pointerSide: 'bottom',
         pointerAlign: 'right',
@@ -21,6 +22,7 @@ const steps: TutorialStep[] = [
 
 export default function DashboardTutorial() {
     const dispatch = useDispatch();
+    const { t } = useT();
     const [currentStep, setCurrentStep] = useState(0);
 
     const tutorialPending = useSelector((state: any) => state.todos?.config?.tutorialPending);
@@ -56,7 +58,7 @@ export default function DashboardTutorial() {
     const bubble = (
         <View className="bg-gray-900 rounded-2xl px-6 py-5 shadow-lg">
             <Text className="text-lg font-semibold text-white text-center leading-relaxed">
-                {step.text}
+                {t(step.textKey)}
             </Text>
         </View>
     );

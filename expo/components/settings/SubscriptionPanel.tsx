@@ -3,16 +3,19 @@ import PanelDark from "@/components/panels/PanelDark";
 import LinkSection from "@/components/panels/LinkSection";
 import { useAppSession } from "@/components/providers/AppSessionProvider";
 import { dToD } from "@/lib/dateUtil";
+import { useT } from "@/i18n";
 
 function HasSubscriptionPanel() {
     const { rcUser, rcPackages } = useAppSession();
+    const { t } = useT();
 
     let title = rcUser?.activeSubscription;
-    let details = "Active Pro Subscription.";
-    let details2 = "Renews automatically on " + dToD(rcUser?.activeSubscriptionDetails?.expiresDate) + ".";
+    const expires = dToD(rcUser?.activeSubscriptionDetails?.expiresDate);
+    let details = t("settings.subscriptionActive");
+    let details2 = t("settings.subscriptionRenews", { date: expires });
 
     if (!rcUser?.activeSubscriptionDetails?.willRenew) {
-        details2 = "Ends on " + dToD(rcUser?.activeSubscriptionDetails?.expiresDate) + " – won't renew."
+        details2 = t("settings.subscriptionEnds", { date: expires });
     }
 
     rcPackages?.map(pkg => {
@@ -31,10 +34,11 @@ function HasSubscriptionPanel() {
 }
 
 function NoSubscriptionPanel() {
+    const { t } = useT();
     return <PanelDark>
         <LinkSection href="/get-subscription"
-            title="Pro Plan Not Active"
-            description="Upgrade to unlock all features."
+            title={t("settings.subscriptionInactiveTitle")}
+            description={t("settings.subscriptionInactiveDesc")}
             icon="fa5:crown" />
     </PanelDark>;
 }

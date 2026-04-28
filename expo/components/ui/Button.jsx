@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import InputStringUncentered from "@/components/input/InputStringUncentered";
 import { COLORS } from "@/lib/colors";
 import { hapticLight, hapticMedium, hapticWarning } from "@/lib/hapticUtil";
+import { useT } from "@/i18n";
 
 
 // Four variants:
@@ -38,6 +39,7 @@ export default function Button({
 
     const dispatch = useDispatch();
     const router = useRouter();
+    const { t } = useT();
 
     const [showModal, setShowModal] = useState(false);
     const [yesConfirm, setYesConfirm] = useState("");
@@ -107,7 +109,7 @@ export default function Button({
                                     notCentered
                                     value={yesConfirm}
                                     onChange={setYesConfirm}
-                                    label={"type 'Yes' to confirm"}
+                                    label={t("common.typeYesToConfirm")}
                                 />
                             </View>
                         )}
