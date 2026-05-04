@@ -89,24 +89,21 @@ export const RevenueCatProvider = ({children}: { children: React.ReactNode }) =>
         // sign-in where the server returns a different primary id).
         setRcIsInitializedFor(null);
         setRcUser(USER_NO_SUBSCRIPTION);
-        let cancelled = false;
         const init = async () => {
             try {
                 Purchases.addCustomerInfoUpdateListener(updateCustomerInformation);
                 if (hasConfiguredRef.current) {
                     const result = await Purchases.logIn(userPrimaryId);
-                    if (cancelled) return;
                     if (result?.customerInfo) await updateCustomerInformation(result.customerInfo);
                 } else {
                     const apiKey = Platform.OS === 'ios' ? APIKeys.apple : APIKeys.google;
                     await Purchases.configure({apiKey, appUserID: userPrimaryId});
                     hasConfiguredRef.current = true;
                     const info = await Purchases.getCustomerInfo();
-                    if (cancelled) return;
                     await updateCustomerInformation(info);
                 }
                 const offerings = await Purchases.getOfferings();
-                if (!cancelled && offerings.current) {
+                if (offerings.current) {
                     setRcPackages(offerings.current.availablePackages);
                 }
             } catch (e) {
@@ -115,13 +112,12 @@ export const RevenueCatProvider = ({children}: { children: React.ReactNode }) =>
                 // stamp the app-user-id so rcIsLoaded can resolve.
                 try {
                     const id = await Purchases.getAppUserID();
-                    if (!cancelled && id) setRcIsInitializedFor(id);
+                    if (id) setRcIsInitializedFor(id);
                 } catch {}
             }
         };
         init();
         return () => {
-            cancelled = true;
             Purchases.removeCustomerInfoUpdateListener(updateCustomerInformation);
         };
     }, [userPrimaryId]);

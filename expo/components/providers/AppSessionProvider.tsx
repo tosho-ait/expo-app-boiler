@@ -66,7 +66,7 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const dispatch = useDispatch();
 
-    const {rcIsLoaded, rcUser, rcPackages, rcRestorePurchases, rcPurchasePackage} = useRevenueCat();
+    const {rcUser, rcPackages, rcRestorePurchases, rcPurchasePackage} = useRevenueCat();
 
     const userPrimaryId = useSelector(state => state.todos.userPrimaryId);
     const userOnlineId = useSelector(state => state.todos.userOnlineId);
@@ -272,10 +272,15 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
     }, [isSignedIn, userOnlineId, isLoaded]);
 
 
-    // Hold the splash and the rendered tree together until both auth and RC
-    // have settled, so consumers don't flicker through an unauthenticated /
-    // pre-entitlement frame on boot.
-    const hasBooted = isLoaded && rcIsLoaded;
+    // Hold the splash and the rendered tree together until Clerk auth has
+    // settled, so consumers don't flicker through an unauthenticated frame on
+    // boot. RC is intentionally NOT in this gate — its `rcIsLoaded` flips back
+    // to false whenever userPrimaryId changes (e.g. anonymous → online sign-in
+    // mid-onboarding), and gating the tree on it would unmount the navigator
+    // and bounce the user back to "/". Components that genuinely need RC state
+    // can still read `rcIsLoaded` themselves; the rest just see `rcUser` settle
+    // asynchronously.
+    const hasBooted = isLoaded;
 
     useEffect(() => {
         if (hasBooted) SplashScreen.hideAsync();
