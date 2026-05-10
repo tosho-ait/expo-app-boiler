@@ -9,8 +9,8 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AccountSync from "@/components/feature/AccountSync";
 import Spinner from "@/components/ui/Spinner";
-import { ClerkProvider } from "@clerk/clerk-expo";
-import { resourceCache } from '@clerk/clerk-expo/resource-cache'
+import { ClerkProvider } from "@clerk/expo";
+import { resourceCache } from '@clerk/expo/resource-cache'
 import { tokenCache } from "@/components/providers/tokenCache";
 import { RevenueCatProvider } from "@/components/providers/RevenueCatProvider";
 import { AppSessionProvider } from "@/components/providers/AppSessionProvider";

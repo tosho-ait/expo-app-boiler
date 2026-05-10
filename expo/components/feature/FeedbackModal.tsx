@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import BottomSheet from "@/components/ui/BottomSheet";
 import { fetchFeedback } from '@/lib/fetchUtil';
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from "@clerk/expo";
 import { useT } from "@/i18n";
 
 

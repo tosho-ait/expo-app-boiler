@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import React from "react";
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { Show } from "@clerk/expo";
 import Button from "../ui/Button";
 import { useSelector } from "react-redux";
 import { timestampToDisplayDate } from "../../lib/dateUtil";
@@ -20,7 +20,7 @@ export default function SyncPanel() {
 
     return (
         <>
-            <SignedIn>
+            <Show when="signed-in">
                 <PanelDark>
                     <View className="flex flex-col w-full justify-center items-center py-2">
 
@@ -40,9 +40,8 @@ export default function SyncPanel() {
                             </Text>}
                     </View>
                 </PanelDark>
-            </SignedIn>
-
-            <SignedOut>
+            </Show>
+            <Show when="signed-out">
                 <PanelDark>
                     {/* @ts-ignore */}
                     <Button href="/authenticate" custom={
@@ -58,7 +57,7 @@ export default function SyncPanel() {
                         </View>
                     } />
                 </PanelDark>
-            </SignedOut>
+            </Show>
         </>
     );
 }

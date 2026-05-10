@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@/components/ui/Button";
 import { useSelector } from "react-redux";
 import Papa from 'papaparse';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import PageSignature from "@/components/layout/PageSignature";
 import InfoPanel from "@/components/panels/InfoPanel";

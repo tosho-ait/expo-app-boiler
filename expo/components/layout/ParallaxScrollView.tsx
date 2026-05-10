@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
-import { SafeAreaView, View, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useBottomTabOverflow } from './TabBarBackground';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ScrollProvider } from "../providers/ScrollProvider";

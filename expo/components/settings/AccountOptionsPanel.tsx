@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import React from "react";
 import LinkSection from "../panels/LinkSection";
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { Show } from "@clerk/expo";
 import { useSelector } from "react-redux";
 import PanelDark from "../panels/PanelDark";
 import { useAppSession } from "../providers/AppSessionProvider";
@@ -16,7 +16,7 @@ export default function AccountOptionsPanel() {
 
     return (
         <View>
-            <SignedOut>
+            <Show when="signed-out">
                 <PanelDark>
                     <LinkSection
                         onPress={doLogoutWipeDevice}
@@ -30,9 +30,8 @@ export default function AccountOptionsPanel() {
                         description={t("settings.deleteDataDesc")}
                         icon="ii:trash-outline" />
                 </PanelDark>
-            </SignedOut>
-
-            <SignedIn>
+            </Show>
+            <Show when="signed-in">
                 <PanelDark>
                     <LinkSection onPress={doEraseAccount}
                         confirm={{
@@ -70,7 +69,7 @@ export default function AccountOptionsPanel() {
                         }} />}
 
                 </PanelDark>
-            </SignedIn>
+            </Show>
         </View>
     );
 }

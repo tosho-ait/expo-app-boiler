@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { router } from "expo-router";
-import { useUser } from "@clerk/clerk-expo";
+import { useUser } from "@clerk/expo";
 import { saveConfig } from "@/redux/action";
 
 import LanguagePage from "@/components/onboarding/LanguagePage";

@@ -20,9 +20,6 @@ module.exports = {
             bundleIdentifier: process.env.EXPO_IOS_BUNDLE_ID || "com.example.appboiler",
             infoPlist: {
                 ITSAppUsesNonExemptEncryption: false
-            },
-            config: {
-                usesNonExemptEncryption: false
             }
         },
         android: {
@@ -40,7 +37,15 @@ module.exports = {
         },
         plugins: [
             "expo-router",
-            ["expo-splash-screen"]
+            ["expo-splash-screen"],
+            "expo-font",
+            "expo-secure-store",
+            "expo-web-browser",
+            ["expo-build-properties", {
+                ios: {
+                    deploymentTarget: "15.1"
+                }
+            }]
         ],
         experiments: {
             typedRoutes: true
