@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Text, View, TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TextInput } from 'react-native';
 
 
 function sanitizeLabel(str) {
@@ -14,31 +14,35 @@ function sanitizeEmail(str) {
 }
 
 const InputStringUncentered = ({
-                                   value,
-                                   onChange,
-                                   label,
-                                   isDisabled,
-                                   readOnly,
-                                   isEmail,
-                                   isLabel,
-                                   maxLength,
-                               }) => {
+    value,
+    onChange,
+    label,
+    isDisabled,
+    readOnly,
+    isEmail,
+    isLabel,
+    maxLength,
+}) => {
 
     const [str, setStr] = useState(value);
+    const [isFocused, setIsFocused] = useState(false);
+
+    const borderClass = isFocused ? "border-tertiary-500" : "border-outline-200";
 
     return (
         <View className="w-full mt-1">
 
-            <View className="bg-white border border-gray-300 rounded-xl px-4 h-[50px] items-center flex-row">
+            <View className={`bg-background-0 border rounded-ios-xl px-4 h-[54px] items-center flex-row ${borderClass}`}>
 
-                <Text className="text-gray-500 text-lg mr-1">{label}</Text>
+                <Text className="text-typography-500 text-body mr-2">{label}</Text>
 
                 <TextInput
                     style={{
                         flex: 1,
-                        fontSize: 18,
-                        textAlign: 'center',
-                        paddingVertical: 0
+                        fontSize: 17,
+                        color: isDisabled ? '#8E8E93' : '#111111',
+                        textAlign: 'left',
+                        paddingVertical: 0,
                     }}
                     editable={!isDisabled && !readOnly}
                     textAlignVertical="center"
@@ -60,6 +64,8 @@ const InputStringUncentered = ({
                     placeholder=""
                     autoCapitalize='none'
                     autoCorrect={false}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                 />
             </View>
         </View>

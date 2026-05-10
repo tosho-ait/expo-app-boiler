@@ -42,6 +42,7 @@ const en = {
         },
         survey: {
             title: "What are you here to do?",
+            subtitle: "We'll tailor a few suggestions to your goal.",
             sideProject: "Build a side project",
             production: "Ship a production app",
             learning: "Learn the stack",
@@ -126,7 +127,11 @@ const en = {
         empty: "No todos yet",
         emptyHint: "Tap + to add one",
         untitled: "Untitled",
-        tutorialTap: "Tap to add your\nfirst todo",
+        allDone: "All done",
+        tasksRemaining: {
+            one: "{{count}} task remaining",
+            other: "{{count}} tasks remaining",
+        },
     },
 
     todoEdit: {
@@ -143,6 +148,11 @@ const en = {
         languageLabel: "Language",
         prefsTitle: "Settings",
         prefsDesc: "View and adjust the app's primary settings.",
+
+        sectionSubscription: "Subscription",
+        sectionSync: "Sync",
+        sectionGeneral: "General",
+        sectionAccount: "Account",
 
         subscriptionActive: "Active Pro Subscription.",
         subscriptionRenews: "Renews automatically on {{date}}.",
@@ -179,6 +189,7 @@ const en = {
 
     userPanel: {
         anonymous: "Anonymous User",
+        signInHint: "Sign in to sync your data across devices.",
         signUpFree: "Sign Up for Free",
         errorUpdatingName: "Error updating name",
     },

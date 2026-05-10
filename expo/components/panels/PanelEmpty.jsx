@@ -1,20 +1,24 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {COLORS} from "@/lib/colors";
+import { Text, View } from 'react-native';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Button from "@/components/ui/Button";
 
-const PanelEmpty = ({text, subtext, icon = "folder-search-outline", action}) => {
-
+const PanelEmpty = ({ text, subtext, icon = "folder-search-outline", action }) => {
     return (
-        <View className="flex-1 justify-center items-center py-20 m-3 gap-4">
-            <MaterialCommunityIcons name={icon} size={72} color={COLORS.MUTED_500}/>
-            <Text className="text-lg text-gray-500 text-center">{text}</Text>
+        <View className="flex-1 justify-center items-center py-16 px-6 gap-4">
+            <View className="w-20 h-20 rounded-full bg-background-100 items-center justify-center mb-2">
+                <MaterialCommunityIcons name={icon} size={40} color="#8E8E93" />
+            </View>
+            <Text className="text-title-3 text-typography-900 text-center">{text}</Text>
             {subtext && (
-                <Text className="text-sm text-gray-400 text-center px-6 -mt-2">{subtext}</Text>
+                <Text className="text-callout text-typography-500 text-center -mt-2">
+                    {subtext}
+                </Text>
             )}
             {action && (
-                <Button blue pill title={action.label} onPress={action.onPress}/>
+                <View className="pt-2 w-full max-w-[280px]">
+                    <Button pill title={action.label} onPress={action.onPress} />
+                </View>
             )}
         </View>
     );

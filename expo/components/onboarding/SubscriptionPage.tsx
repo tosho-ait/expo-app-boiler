@@ -8,7 +8,6 @@ import { useAppSession } from "@/components/providers/AppSessionProvider";
 import { useDispatch } from "react-redux";
 import { router } from "expo-router";
 import { setPurchaseIntent } from "@/redux/action";
-import { COLORS } from "@/lib/colors";
 import ProgressDots from "@/components/ui/ProgressDots";
 import { useT } from "@/i18n";
 
@@ -52,16 +51,16 @@ export default function SubscriptionPage({
     const buttons = isOnboarding ? (
         <View className="items-center w-full">
             {/* @ts-ignore */}
-            <Button link_pale title={t("common.skip")} action={() => handleFinish && handleFinish()} testID="onboarding-skip" />
+            <Button ghost title={t("common.skip")} action={() => handleFinish && handleFinish()} testID="onboarding-skip" />
         </View>
     ) : null;
 
-    const renderSubscriptionFeature = (icon: string, text: string, bgClass: string) => (
-        <View className="flex-row items-center mb-3 px-2">
-            <View className={`w-12 h-12 rounded-full items-center justify-center mr-4 ${bgClass}`}>
-                {getIcon(icon, 22, "#ffffff")}
+    const renderFeature = (icon: string, text: string, tint: string, iconColor: string) => (
+        <View className="flex-row items-center mb-3">
+            <View className={`w-10 h-10 rounded-ios-sm items-center justify-center mr-3 ${tint}`}>
+                {getIcon(icon, 20, iconColor)}
             </View>
-            <Text className="text-xl text-gray-800 font-medium flex-1">{text}</Text>
+            <Text className="text-callout text-typography-800 font-medium flex-1">{text}</Text>
         </View>
     );
 
@@ -71,39 +70,41 @@ export default function SubscriptionPage({
             <ScreenLayout>
                 <View className="flex-1">
 
-                    <View className="mb-6 items-center">
-                        <Text className="text-4xl font-black text-center text-gray-900 leading-tight px-2">
+                    <View className="mb-6">
+                        <Text className="text-title-1 font-bold text-typography-900 px-1 leading-tight">
                             {t("onboarding.subscription.title")}
                         </Text>
                     </View>
 
-                    <View className="flex w-full mt-5 mb-2">
-                        {renderSubscriptionFeature("mc:cloud-sync", t("onboarding.subscription.feature1"), COLORS.BLUE_BG)}
-                        {renderSubscriptionFeature("fa:bar-chart", t("onboarding.subscription.feature2"), COLORS.GREEN_BG)}
-                        {renderSubscriptionFeature("fa5:users", t("onboarding.subscription.feature3"), COLORS.PURPLE_BG)}
+                    {/* Pricing card */}
+                    <View className="bg-background-100 rounded-ios-2xl p-5 mb-6">
+                        {renderFeature("mc:cloud-sync", t("onboarding.subscription.feature1"), "bg-tertiary-50", "#0A84FF")}
+                        {renderFeature("fa:bar-chart", t("onboarding.subscription.feature2"), "bg-success-50", "#34C759")}
+                        {renderFeature("fa5:users", t("onboarding.subscription.feature3"), "bg-[#F3E8FF]", "#AF52DE")}
                     </View>
 
                 </View>
 
-                <View className="flex gap-1 items-center w-full mb-6">
+                <View className="flex gap-2 items-center w-full mb-2">
                     {rcUserHasActiveSubscription ? (
                         <View className="w-full pb-4">
+                            {/* @ts-ignore */}
                             <Button pill href={rcUser?.managementURL} title={t("onboarding.subscription.manage")} />
                         </View>
                     ) : (
                         <>
-                            <View className="flex-row items-center mb-3">
+                            <View className="flex-row items-center mb-2">
                                 <View className="mr-2">
-                                    {getIcon("fa5:check", 16, "#4b5563")}
+                                    {getIcon("fa5:check", 14, "#636366")}
                                 </View>
-                                <Text className="text-sm font-semibold text-gray-600">{t("onboarding.subscription.noPaymentDue")}</Text>
+                                <Text className="text-footnote font-semibold text-typography-500">{t("onboarding.subscription.noPaymentDue")}</Text>
                             </View>
                             {/* @ts-ignore */}
                             <Button pill title={t("onboarding.subscription.tryFree")} action={handleSubscribe as any} />
-                            <Text className="text-sm font-medium text-gray-500 mt-2">
+                            <Text className="text-footnote font-medium text-typography-500 mt-2 text-center">
                                 {t("onboarding.subscription.trialInfo")}
                             </Text>
-                            <Text className="text-sm font-medium text-gray-500 mt-2">
+                            <Text className="text-footnote font-medium text-typography-500 text-center">
                                 {t("onboarding.subscription.priceInfo", { price: priceString, monthly: monthlyPriceString })}
                             </Text>
                         </>

@@ -40,8 +40,8 @@ export default function ProcessPurchase() {
     if (error) {
         return (
             <PageSignature>
-                <View className="flex-1 justify-center items-center bg-white">
-                    <Text className="text-lg font-bold text-gray-700 mt-4 mb-6">
+                <View className="flex-1 justify-center items-center">
+                    <Text className="text-headline font-semibold text-typography-700 mt-4 mb-6 text-center">
                         {t("processPurchase.failed")}
                     </Text>
                     <Button pill title={t("processPurchase.goBack")} onPress={() => router.replace("/get-subscription")} />
@@ -52,8 +52,8 @@ export default function ProcessPurchase() {
 
     return (
         <PageSignature>
-            <View className="flex-1 justify-center items-center bg-white">
-                <Text className="text-lg font-bold text-gray-700 mt-4">
+            <View className="flex-1 justify-center items-center">
+                <Text className="text-headline font-semibold text-typography-700 mt-4">
                     {t("processPurchase.completing")}
                 </Text>
             </View>

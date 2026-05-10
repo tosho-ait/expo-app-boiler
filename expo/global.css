@@ -1,3 +1,242 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Design tokens — iOS 17 / soft-neumorphic palette.
+ * Values are space-separated RGB triplets to support `rgb(var(--token) / <alpha>)`.
+ *
+ * Layers:
+ *   background-0   = elevated surface (cards, sheets)        light=#FFFFFF dark=#1C1C1E
+ *   background-50  = secondary elevated                      light=#FAFAFC dark=#2C2C2E
+ *   background-100 = page background (system grouped)        light=#F2F2F7 dark=#000000
+ *
+ *   typography-900 = primary label
+ *   typography-600 = secondary label
+ *   typography-400 = tertiary label
+ *   typography-300 = quaternary / placeholder
+ *
+ *   outline-100/200 = hairline separator
+ *
+ *   primary-* = brand navy (CTAs, headings) — kept from prior boilerplate
+ *   tertiary-500 = iOS system blue (links, focus rings)
+ */
+:root {
+    /* Surfaces / backgrounds */
+    --color-background-0: 255 255 255;
+    --color-background-50: 250 250 252;
+    --color-background-100: 242 242 247;
+    --color-background-200: 229 229 234;
+    --color-background-300: 209 209 214;
+    --color-background-400: 199 199 204;
+    --color-background-500: 174 174 178;
+    --color-background-600: 142 142 147;
+    --color-background-700: 99 99 102;
+    --color-background-800: 58 58 60;
+    --color-background-900: 28 28 30;
+    --color-background-950: 18 18 18;
+    --color-background-error: 255 235 234;
+    --color-background-warning: 255 244 222;
+    --color-background-success: 230 248 235;
+    --color-background-info: 224 242 255;
+    --color-background-muted: 242 242 247;
+
+    /* Text / labels */
+    --color-typography-0: 255 255 255;
+    --color-typography-50: 247 247 250;
+    --color-typography-100: 235 235 240;
+    --color-typography-200: 209 209 214;
+    --color-typography-300: 174 174 178;
+    --color-typography-400: 142 142 147;
+    --color-typography-500: 99 99 102;
+    --color-typography-600: 72 72 74;
+    --color-typography-700: 58 58 60;
+    --color-typography-800: 28 28 30;
+    --color-typography-900: 17 17 17;
+    --color-typography-950: 0 0 0;
+
+    /* Outlines / separators (hairline) */
+    --color-outline-0: 255 255 255;
+    --color-outline-50: 247 247 250;
+    --color-outline-100: 230 230 235;
+    --color-outline-200: 209 209 214;
+    --color-outline-300: 199 199 204;
+    --color-outline-400: 174 174 178;
+    --color-outline-500: 142 142 147;
+    --color-outline-600: 99 99 102;
+    --color-outline-700: 72 72 74;
+    --color-outline-800: 58 58 60;
+    --color-outline-900: 28 28 30;
+    --color-outline-950: 0 0 0;
+
+    /* Primary — brand navy */
+    --color-primary-0: 240 244 250;
+    --color-primary-50: 219 226 238;
+    --color-primary-100: 188 200 222;
+    --color-primary-200: 150 168 199;
+    --color-primary-300: 110 132 174;
+    --color-primary-400: 71 96 145;
+    --color-primary-500: 39 65 113;
+    --color-primary-600: 24 47 87;
+    --color-primary-700: 15 33 65;
+    --color-primary-800: 9 26 47;
+    --color-primary-900: 6 18 35;
+    --color-primary-950: 3 11 22;
+
+    /* Secondary — neutral gray (used for tinted fills) */
+    --color-secondary-0: 250 250 252;
+    --color-secondary-50: 242 242 247;
+    --color-secondary-100: 229 229 234;
+    --color-secondary-200: 209 209 214;
+    --color-secondary-300: 199 199 204;
+    --color-secondary-400: 174 174 178;
+    --color-secondary-500: 142 142 147;
+    --color-secondary-600: 99 99 102;
+    --color-secondary-700: 72 72 74;
+    --color-secondary-800: 58 58 60;
+    --color-secondary-900: 44 44 46;
+    --color-secondary-950: 28 28 30;
+
+    /* Tertiary — iOS system blue (focus, inline links, indicators) */
+    --color-tertiary-50: 224 242 255;
+    --color-tertiary-100: 191 226 255;
+    --color-tertiary-200: 138 200 255;
+    --color-tertiary-300: 89 173 255;
+    --color-tertiary-400: 50 148 255;
+    --color-tertiary-500: 10 132 255;
+    --color-tertiary-600: 0 110 230;
+    --color-tertiary-700: 0 88 184;
+    --color-tertiary-800: 0 65 139;
+    --color-tertiary-900: 0 43 94;
+    --color-tertiary-950: 0 25 56;
+
+    /* Semantic — error / success / warning / info */
+    --color-error-0: 255 245 245;
+    --color-error-50: 255 235 234;
+    --color-error-100: 255 213 211;
+    --color-error-200: 255 168 165;
+    --color-error-300: 255 122 117;
+    --color-error-400: 255 76 70;
+    --color-error-500: 255 59 48;
+    --color-error-600: 224 36 26;
+    --color-error-700: 184 22 14;
+    --color-error-800: 139 14 8;
+    --color-error-900: 94 8 5;
+    --color-error-950: 56 4 2;
+
+    --color-success-0: 240 252 244;
+    --color-success-50: 230 248 235;
+    --color-success-100: 198 240 211;
+    --color-success-200: 145 226 173;
+    --color-success-300: 95 211 138;
+    --color-success-400: 60 195 110;
+    --color-success-500: 52 199 89;
+    --color-success-600: 36 167 70;
+    --color-success-700: 26 130 53;
+    --color-success-800: 19 94 39;
+    --color-success-900: 12 60 25;
+    --color-success-950: 6 32 13;
+
+    --color-warning-0: 255 250 240;
+    --color-warning-50: 255 244 222;
+    --color-warning-100: 255 230 184;
+    --color-warning-200: 255 209 130;
+    --color-warning-300: 255 184 77;
+    --color-warning-400: 255 159 30;
+    --color-warning-500: 255 149 0;
+    --color-warning-600: 219 122 0;
+    --color-warning-700: 173 95 0;
+    --color-warning-800: 128 70 0;
+    --color-warning-900: 82 44 0;
+    --color-warning-950: 46 24 0;
+
+    --color-info-0: 240 249 255;
+    --color-info-50: 224 242 255;
+    --color-info-100: 191 226 255;
+    --color-info-200: 138 200 255;
+    --color-info-300: 89 173 255;
+    --color-info-400: 50 148 255;
+    --color-info-500: 90 200 250;
+    --color-info-600: 0 145 220;
+    --color-info-700: 0 110 168;
+    --color-info-800: 0 78 119;
+    --color-info-900: 0 50 77;
+    --color-info-950: 0 26 41;
+
+    /* Indicators */
+    --color-indicator-primary: 9 26 47;
+    --color-indicator-info: 10 132 255;
+    --color-indicator-error: 255 59 48;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Surfaces */
+        --color-background-0: 28 28 30;
+        --color-background-50: 44 44 46;
+        --color-background-100: 0 0 0;
+        --color-background-200: 58 58 60;
+        --color-background-300: 72 72 74;
+        --color-background-400: 99 99 102;
+        --color-background-500: 142 142 147;
+        --color-background-600: 174 174 178;
+        --color-background-700: 199 199 204;
+        --color-background-800: 229 229 234;
+        --color-background-900: 242 242 247;
+        --color-background-950: 250 250 252;
+        --color-background-error: 56 14 14;
+        --color-background-warning: 60 38 8;
+        --color-background-success: 14 48 24;
+        --color-background-info: 8 38 64;
+        --color-background-muted: 44 44 46;
+
+        /* Labels */
+        --color-typography-0: 0 0 0;
+        --color-typography-50: 28 28 30;
+        --color-typography-100: 44 44 46;
+        --color-typography-200: 58 58 60;
+        --color-typography-300: 99 99 102;
+        --color-typography-400: 142 142 147;
+        --color-typography-500: 174 174 178;
+        --color-typography-600: 199 199 204;
+        --color-typography-700: 229 229 234;
+        --color-typography-800: 242 242 247;
+        --color-typography-900: 247 247 250;
+        --color-typography-950: 255 255 255;
+
+        /* Outlines */
+        --color-outline-0: 0 0 0;
+        --color-outline-50: 28 28 30;
+        --color-outline-100: 58 58 60;
+        --color-outline-200: 72 72 74;
+        --color-outline-300: 99 99 102;
+        --color-outline-400: 142 142 147;
+        --color-outline-500: 174 174 178;
+        --color-outline-600: 199 199 204;
+        --color-outline-700: 229 229 234;
+        --color-outline-800: 242 242 247;
+        --color-outline-900: 247 247 250;
+        --color-outline-950: 255 255 255;
+
+        /* Secondary inverted for tinted fills on dark */
+        --color-secondary-0: 28 28 30;
+        --color-secondary-50: 44 44 46;
+        --color-secondary-100: 58 58 60;
+        --color-secondary-200: 72 72 74;
+        --color-secondary-300: 99 99 102;
+        --color-secondary-400: 142 142 147;
+        --color-secondary-500: 174 174 178;
+        --color-secondary-600: 199 199 204;
+        --color-secondary-700: 209 209 214;
+        --color-secondary-800: 229 229 234;
+        --color-secondary-900: 242 242 247;
+        --color-secondary-950: 250 250 252;
+
+        /* Tertiary (iOS dark blue) */
+        --color-tertiary-500: 10 132 255;
+        --color-tertiary-600: 50 148 255;
+
+        /* Indicators */
+        --color-indicator-primary: 247 247 250;
+    }
+}

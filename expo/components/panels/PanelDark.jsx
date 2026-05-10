@@ -1,14 +1,23 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, { Children } from 'react';
+import { View } from 'react-native';
 
-const PanelDark = ({children}) => {
+// iOS grouped-list container: a single elevated white card whose children
+// (typically <LinkSection> rows) are separated by inset hairline dividers.
+const PanelDark = ({ children }) => {
+    const items = Children.toArray(children).filter(Boolean);
 
-    return <View className="bg-zinc-200 p-3 rounded-md">
-        <View className="flex gap-3 py-1">
-            {children}
+    return (
+        <View className="bg-background-0 rounded-ios-2xl shadow-ios-card overflow-hidden">
+            {items.map((child, i) => (
+                <View key={i}>
+                    {child}
+                    {i < items.length - 1 && (
+                        <View className="ml-[64px] h-px bg-outline-100" />
+                    )}
+                </View>
+            ))}
         </View>
-    </View>;
-
+    );
 };
 
 export default PanelDark;

@@ -2,8 +2,7 @@ import { Text, View } from 'react-native';
 import React from 'react';
 import Button from "@/components/ui/Button";
 import PageSignature from "@/components/layout/PageSignature";
-import { getIcon } from "@/lib/iconUtil";
-import { COLORS } from "@/lib/colors";
+import IconInCircle from "@/components/ui/IconInCircle";
 import { ScreenLayout, TitleText } from "./Shared";
 import { useAppSession } from "@/components/providers/AppSessionProvider";
 import ProgressDots from "../ui/ProgressDots";
@@ -23,8 +22,6 @@ export default function LanguagePage({ onNext, onBack }: Props) {
     const { t } = useT();
     const dispatch = useDispatch();
 
-    // Read & write through redux so the UI flips instantly on selection —
-    // every useT consumer (including this page itself) re-renders.
     const language = (useSelector(
         (state: any) => state.todos?.config?.language
     ) as LanguageCode | undefined) ?? DEFAULT_LANGUAGE;
@@ -43,15 +40,19 @@ export default function LanguagePage({ onNext, onBack }: Props) {
     return (
         <PageSignature onBack={onBack} heading={<ProgressDots total={6} completed={1} />} buttons={buttons}>
             <ScreenLayout>
-                <View className="items-center">
-                    <View className={"w-28 h-28 rounded-full items-center justify-center mb-12 " + COLORS.BLUE_BG}>
-                        {getIcon("mc:earth", 56, "#ffffff")}
-                    </View>
-                    <TitleText>{t("onboarding.language.title")}</TitleText>
+                <View className="items-center mt-4 mb-8">
+                    <IconInCircle
+                        variant="large"
+                        rounded={false}
+                        icon="mc:earth"
+                        bgColor="#0A84FF"
+                        iconColor="#FFFFFF"
+                    />
                 </View>
-                <View className="py-4">
-                    <LanguagePanel language={language} setLanguage={setLanguage} />
-                    <Text className="text-gray-400 text-sm text-center mt-3">
+                <TitleText>{t("onboarding.language.title")}</TitleText>
+                <View className="pt-4">
+                    <LanguagePanel language={language} setLanguage={setLanguage} hideLabel />
+                    <Text className="text-footnote text-typography-400 text-center mt-4 px-4">
                         {t("onboarding.language.hint")}
                     </Text>
                 </View>

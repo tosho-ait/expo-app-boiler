@@ -19,26 +19,25 @@ export default function DotButton({
         if (href) router.navigate(href);
     };
 
-    const bgColor = active ? "bg-gray-100" : "bg-white";
-    const iconColor = active ? "#000000" : "#94a3b8";
+    const bgColor = active ? "bg-background-100" : "bg-background-0";
+    const iconColor = active ? "#091A2F" : "#8E8E93";
 
     let button = (
-        <View className="bg-white rounded-full p-1">
-            <Pressable
-                onPress={doOnPress}
-                className={`w-12 h-12 flex justify-center items-center rounded-full ${bgColor}`}
-            >
+        <Pressable
+            onPress={doOnPress}
+            className="active:opacity-70 active:scale-[0.95]">
+            <View className={`w-12 h-12 rounded-full items-center justify-center shadow-ios-card ${bgColor}`}>
                 <Text>{getIcon(icon, 20, iconColor)}</Text>
-            </Pressable>
-        </View>
+            </View>
+        </Pressable>
     );
 
     if (overlay) {
         return (
             <View className="relative">
                 {button}
-                <View className="absolute top-0 right-0 bg-gray-700 rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1 z-20">
-                    <Text className="text-white text-xs font-bold">{overlay}</Text>
+                <View className="absolute -top-1 -right-1 bg-error-500 rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1.5 z-20 border-2 border-background-0">
+                    <Text className="text-white text-[10px] font-bold">{overlay}</Text>
                 </View>
             </View>
         );

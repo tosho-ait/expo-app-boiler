@@ -1,5 +1,4 @@
 import React from "react";
-import PanelDark from "@/components/panels/PanelDark";
 import LinkSection from "@/components/panels/LinkSection";
 import { useAppSession } from "@/components/providers/AppSessionProvider";
 import { dToD } from "@/lib/dateUtil";
@@ -24,23 +23,31 @@ function HasSubscriptionPanel() {
         }
     });
 
-    return <PanelDark>
-        <LinkSection href={rcUser?.managementURL}
+    return (
+        <LinkSection
+            href={rcUser?.managementURL}
             title={title}
             description={details}
             description2={details2}
-            icon="fa5:crown" />
-    </PanelDark>
+            icon="fa5:crown"
+            tint="bg-warning-50"
+            iconColor="#FF9500"
+        />
+    );
 }
 
 function NoSubscriptionPanel() {
     const { t } = useT();
-    return <PanelDark>
-        <LinkSection href="/get-subscription"
+    return (
+        <LinkSection
+            href="/get-subscription"
             title={t("settings.subscriptionInactiveTitle")}
             description={t("settings.subscriptionInactiveDesc")}
-            icon="fa5:crown" />
-    </PanelDark>;
+            icon="fa5:crown"
+            tint="bg-warning-50"
+            iconColor="#FF9500"
+        />
+    );
 }
 
 export default function SubscriptionPanel() {

@@ -30,9 +30,9 @@ export default function EditSettingsScreen() {
             noBackButton={false}
             onBack={() => router.back()}>
 
-            <View className="p-4" />
-
-            <LanguagePanel language={language} setLanguage={setLanguage} />
+            <View className="pt-4">
+                <LanguagePanel language={language} setLanguage={setLanguage} />
+            </View>
 
         </PageSignature>
     );

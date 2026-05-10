@@ -184,8 +184,29 @@ module.exports = {
             fontWeight: {
                 extrablack: '950',
             },
+            // iOS 17 type scale (matches Apple's HIG sizes; line-heights tuned for tight UI density).
             fontSize: {
                 '2xs': '10px',
+                'caption-2': ['11px', { lineHeight: '13px', letterSpacing: '0.07px' }],
+                'caption': ['12px', { lineHeight: '16px', letterSpacing: '0' }],
+                'footnote': ['13px', { lineHeight: '18px', letterSpacing: '-0.08px' }],
+                'subhead': ['15px', { lineHeight: '20px', letterSpacing: '-0.24px' }],
+                'callout': ['16px', { lineHeight: '21px', letterSpacing: '-0.32px' }],
+                'body': ['17px', { lineHeight: '22px', letterSpacing: '-0.41px' }],
+                'headline': ['17px', { lineHeight: '22px', letterSpacing: '-0.41px' }],
+                'title-3': ['20px', { lineHeight: '25px', letterSpacing: '-0.45px' }],
+                'title-2': ['22px', { lineHeight: '28px', letterSpacing: '-0.5px' }],
+                'title-1': ['28px', { lineHeight: '34px', letterSpacing: '-0.6px' }],
+                'large-title': ['34px', { lineHeight: '41px', letterSpacing: '-0.8px' }],
+            },
+            borderRadius: {
+                'ios-sm': '8px',
+                'ios': '10px',
+                'ios-lg': '14px',
+                'ios-xl': '18px',
+                'ios-2xl': '22px',
+                'ios-3xl': '28px',
+                'ios-4xl': '36px',
             },
             boxShadow: {
                 'hard-1': '-2px 2px 8px 0px rgba(38, 38, 38, 0.20)',
@@ -197,6 +218,11 @@ module.exports = {
                 'soft-2': '0px 0px 20px rgba(38, 38, 38, 0.2)',
                 'soft-3': '0px 0px 30px rgba(38, 38, 38, 0.1)',
                 'soft-4': '0px 0px 40px rgba(38, 38, 38, 0.1)',
+                // iOS 17 / soft-neumorphic elevations — multi-stop, low alpha.
+                'ios-card': '0px 1px 2px rgba(15, 23, 42, 0.04), 0px 4px 12px rgba(15, 23, 42, 0.06)',
+                'ios-card-lg': '0px 2px 4px rgba(15, 23, 42, 0.04), 0px 12px 32px rgba(15, 23, 42, 0.10)',
+                'ios-fab': '0px 6px 18px rgba(9, 26, 47, 0.30), 0px 2px 4px rgba(9, 26, 47, 0.20)',
+                'ios-pressed-inset': 'inset 0px 1px 2px rgba(15, 23, 42, 0.08)',
             },
         },
     },

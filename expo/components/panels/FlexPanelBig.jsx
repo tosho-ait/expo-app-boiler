@@ -1,11 +1,12 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
-function FlexPanelBig({children}) {
-
-    return <View className="flex gap-5 px-3">
-        {children}
-    </View>;
+function FlexPanelBig({ children }) {
+    return (
+        <View className="flex gap-6 px-4">
+            {children}
+        </View>
+    );
 }
 
 export default FlexPanelBig;

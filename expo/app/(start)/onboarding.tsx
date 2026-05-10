@@ -1,10 +1,8 @@
 // @ts-nocheck
 import { Text, View } from 'react-native';
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { router } from "expo-router";
-import { useUser } from "@clerk/expo";
-import { saveConfig } from "@/redux/action";
+import { useUser } from "@clerk/clerk-expo";
 
 import LanguagePage from "@/components/onboarding/LanguagePage";
 import SurveyGoalPage from "@/components/onboarding/SurveyGoalPage";
@@ -17,7 +15,6 @@ export { TitleText, SubText, ScreenLayout } from "@/components/onboarding/Shared
 export default function OnboardingScreen() {
 
     const { user } = useUser();
-    const dispatch = useDispatch();
 
     const [step, setStep] = useState(0);
     const [surveyGoal, setSurveyGoal] = useState<string | null>(null);
@@ -33,10 +30,6 @@ export default function OnboardingScreen() {
 
     const handleNext = () => {
         if (step < flow.length - 1) {
-            const nextStep = flow[step + 1];
-            if (nextStep === 'FEATURE_FEEDBACK') {
-                dispatch(saveConfig({ tutorialPending: true }));
-            }
             setStep(prev => prev + 1);
         }
     };

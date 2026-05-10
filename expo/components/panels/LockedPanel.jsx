@@ -1,58 +1,51 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {getIcon} from "../../lib/iconUtil";
-import colors from "tailwindcss/colors";
+import { Text, View } from 'react-native';
+import { getIcon } from "../../lib/iconUtil";
 import Button from "@/components/ui/Button";
-import {useT} from "@/i18n";
+import { useT } from "@/i18n";
 
 
-function LockedPanel({text, isCollapsible, icon = "ii:lock-closed", title, href}) {
+function LockedPanel({ text, isCollapsible, icon = "ii:lock-closed", title, href }) {
 
     const [expanded, setExpanded] = React.useState(false);
-    const {t} = useT();
+    const { t } = useT();
 
-    if (text && text.length) {
+    if (!text || !text.length) return null;
 
-        let content = text;
+    const content = isCollapsible && !expanded ? [text[0] + "…"] : text;
 
-        if (isCollapsible && !expanded) {
-            content = [text[0] + "..."];
-        }
-
-        return (
-            <Button href={href} custom={
-                <View className="bg-gray-200 p-4 rounded-xl relative">
-
-                    <View className="absolute top-4 right-4">
-                        {getIcon(icon, 24, colors.gray[600])}
-                    </View>
-
-                    <View className="pr-10 pl-2">
-                        {title &&
-                            <Text className="text-gray-800 font-semibold text-lg mb-2">{title}</Text>}
-
-                        {content.map((paragraph, index) => (
-                            <Text key={index}
-                                  numberOfLines={isCollapsible && !expanded ? 2 : undefined}
-                                  className={`text-gray-800 font-medium text-base ${index > 0 ? 'mt-2' : ''}`}>
-                                {paragraph}
-                            </Text>
-                        ))}
-
-                    </View>
-
+    return (
+        <Button href={href} custom={
+            <View className="bg-background-100 rounded-ios-xl p-4 flex-row gap-3">
+                <View className="w-10 h-10 rounded-full bg-background-0 items-center justify-center shadow-ios-card">
+                    {getIcon(icon, 20, "#636366")}
+                </View>
+                <View className="flex-1">
+                    {title && (
+                        <Text className="text-headline text-typography-900 mb-1">
+                            {title}
+                        </Text>
+                    )}
+                    {content.map((paragraph, index) => (
+                        <Text key={index}
+                            numberOfLines={isCollapsible && !expanded ? 2 : undefined}
+                            className={`text-callout text-typography-600 ${index > 0 ? 'mt-1' : ''}`}>
+                            {paragraph}
+                        </Text>
+                    ))}
                     {isCollapsible && !expanded && (
                         <Text onPress={() => setExpanded(true)}
-                              className="text-gray-600 text-sm opacity-80 text-center font-medium mt-2">
+                            className="text-footnote font-semibold text-tertiary-500 mt-2">
                             {t("infoPanel.showFull")}
                         </Text>
                     )}
                 </View>
-            }/>
-        );
-    }
-
-    return null;
+                <View className="self-center pl-1">
+                    {getIcon("ii:chevron-forward", 18, "#C6C6C8")}
+                </View>
+            </View>
+        } />
+    );
 }
 
 export default LockedPanel;

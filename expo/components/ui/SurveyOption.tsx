@@ -1,25 +1,46 @@
 import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { getIcon } from '@/lib/iconUtil';
+import { hapticLight } from '@/lib/hapticUtil';
 
 interface SurveyOptionProps {
     title: string;
     icon: string;
+    selected?: boolean;
     onPress: () => void;
 }
 
-export default function SurveyOption({ title, icon, onPress }: SurveyOptionProps) {
+// iOS-style selectable cell: rounded card + tinted icon tile + label + chevron.
+export default function SurveyOption({ title, icon, selected = false, onPress }: SurveyOptionProps) {
+
+    const handlePress = () => {
+        hapticLight();
+        onPress();
+    };
+
     return (
-        <TouchableOpacity
-            onPress={onPress}
-            activeOpacity={0.7}
+        <Pressable
+            onPress={handlePress}
             testID={`survey-${title.replace(/\s+/g, '-').toLowerCase()}`}
-            className="flex-row items-center justify-center bg-gray-100 rounded-xl p-4 w-full mb-3"
-        >
-            <View className="mr-3">
-                {getIcon(icon, 24, "#4b5563")}
+            className={
+                "flex-row items-center rounded-ios-2xl px-4 py-4 mb-3 shadow-ios-card active:opacity-80 active:scale-[0.99] " +
+                (selected ? "bg-primary-800" : "bg-background-0")
+            }>
+            <View className={
+                "w-10 h-10 rounded-ios-sm items-center justify-center mr-3 " +
+                (selected ? "bg-white/15" : "bg-background-100")
+            }>
+                {getIcon(icon, 20, selected ? "#FFFFFF" : "#091A2F")}
             </View>
-            <Text className="text-lg font-medium text-gray-800">{title}</Text>
-        </TouchableOpacity>
+            <Text className={
+                "flex-1 text-body font-medium " +
+                (selected ? "text-white" : "text-typography-900")
+            }>
+                {title}
+            </Text>
+            {selected
+                ? getIcon("ii:checkmark-circle", 22, "#FFFFFF")
+                : getIcon("ii:chevron-forward", 18, "#C6C6C8")}
+        </Pressable>
     );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import {useAppSession} from "@/components/providers/AppSessionProvider";
-import {ActivityIndicator, View} from "react-native";
-import {useRevenueCat} from "@/components/providers/RevenueCatProvider";
+import { useAppSession } from "@/components/providers/AppSessionProvider";
+import { ActivityIndicator, View } from "react-native";
+import { useRevenueCat } from "@/components/providers/RevenueCatProvider";
 
 
 export default function Spinner() {
@@ -13,7 +13,11 @@ export default function Spinner() {
         return null;
     }
 
-    return <View className="absolute top-0 left-0 right-0 bottom-0 bg-black/50 z-50 flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#ffffff"/>
-    </View>;
+    return (
+        <View className="absolute inset-0 z-50 flex-1 justify-center items-center bg-black/30">
+            <View className="bg-background-0 rounded-ios-2xl px-8 py-8 shadow-ios-card-lg">
+                <ActivityIndicator size="large" color="#091A2F" />
+            </View>
+        </View>
+    );
 }

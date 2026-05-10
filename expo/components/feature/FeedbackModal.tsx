@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import BottomSheet from "@/components/ui/BottomSheet";
 import { fetchFeedback } from '@/lib/fetchUtil';
-import { useUser } from "@clerk/expo";
+import { useUser } from "@clerk/clerk-expo";
 import { useT } from "@/i18n";
 
 
@@ -51,31 +51,30 @@ function FeedbackModal({ visible, onClose }: { visible: boolean; onClose: () => 
 
     return (
         <BottomSheet visible={visible} onClose={onClose} title={t("feedback.title")} dismissKeyboardOnTap>
-            <View className="p-6 gap-6 flex-1">
+            <View className="px-5 pt-2 pb-6 gap-5 flex-1">
 
-                <Text className="text-lg text-gray-600">
+                <Text className="text-callout text-typography-600">
                     {t("feedback.description")}
                 </Text>
 
                 <TextInput
                     multiline
-                    className="w-full h-[140px] border border-gray-300 rounded-lg p-3 text-xl text-gray-900 align-text-top"
+                    className="w-full h-[160px] bg-background-100 rounded-ios-xl p-4 text-body text-typography-900"
+                    style={{ textAlignVertical: 'top' }}
                     placeholder={t("feedback.placeholder")}
-                    placeholderTextColor="#a3a3a3"
+                    placeholderTextColor="#8E8E93"
                     value={text}
                     onChangeText={setText}
                     editable={!isSubmitting}
                     autoFocus
                 />
 
-                <View className="flex-row justify-end">
-                    <Button
-                        blue
-                        title={isSubmitting ? t("feedback.sending") : t("feedback.send")}
-                        isDisabled={isSubmitting}
-                        onPress={handleSend}
-                    />
-                </View>
+                <Button
+                    pill
+                    title={isSubmitting ? t("feedback.sending") : t("feedback.send")}
+                    isDisabled={isSubmitting}
+                    onPress={handleSend}
+                />
 
             </View>
         </BottomSheet>

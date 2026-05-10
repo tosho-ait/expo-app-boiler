@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { View, ScrollView } from "react-native";
+import { SafeAreaView, View, ScrollView } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import InputString from "@/components/input/InputString";
@@ -42,45 +42,47 @@ export default function TodoEditScreen() {
     };
 
     return (
-        <View className="flex-1 bg-white">
-            <ModalHeader
-                title={isNew ? t("todoEdit.newTodo") : t("todoEdit.editTodo")}
-                onClose={() => router.back()}
-            />
-            <ScrollView className="flex-1 px-5 pt-4">
-                <View className="gap-4">
-                    <InputString
-                        label={t("todoEdit.titleField")}
-                        value={title}
-                        onChange={setTitle}
-                    />
-                    <InputNote
-                        note={note}
-                        setNote={setNote}
-                    />
-                </View>
-
-                <View className="mt-8 gap-3">
-                    <Button
-                        blue
-                        title={t("common.save")}
-                        isDisabled={!title.trim()}
-                        onPress={onSave}
-                    />
-                    {!isNew && (
-                        <Button
-                            link
-                            title={t("common.delete")}
-                            confirm={{
-                                title: t("todoEdit.deleteConfirmTitle"),
-                                text: t("todoEdit.deleteConfirmText"),
-                                buttonLabel: t("common.delete"),
-                            }}
-                            onPress={onDelete}
+        <View className="flex-1 bg-background-100">
+            <SafeAreaView className="flex-1">
+                <ModalHeader
+                    title={isNew ? t("todoEdit.newTodo") : t("todoEdit.editTodo")}
+                    onClose={() => router.back()}
+                />
+                <ScrollView className="flex-1 px-5 pt-4" showsVerticalScrollIndicator={false}>
+                    <View className="gap-5">
+                        <InputString
+                            label={t("todoEdit.titleField")}
+                            value={title}
+                            onChange={setTitle}
                         />
-                    )}
-                </View>
-            </ScrollView>
+                        <InputNote
+                            note={note}
+                            setNote={setNote}
+                        />
+                    </View>
+
+                    <View className="mt-8 gap-3">
+                        <Button
+                            pill
+                            title={t("common.save")}
+                            isDisabled={!title.trim()}
+                            onPress={onSave}
+                        />
+                        {!isNew && (
+                            <Button
+                                destructive
+                                title={t("common.delete")}
+                                confirm={{
+                                    title: t("todoEdit.deleteConfirmTitle"),
+                                    text: t("todoEdit.deleteConfirmText"),
+                                    buttonLabel: t("common.delete"),
+                                }}
+                                onPress={onDelete}
+                            />
+                        )}
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
         </View>
     );
 }

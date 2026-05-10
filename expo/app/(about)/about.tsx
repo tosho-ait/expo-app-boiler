@@ -4,7 +4,6 @@ import PageSignature from "@/components/layout/PageSignature";
 import Button from "@/components/ui/Button";
 import FeedbackModal from "@/components/feature/FeedbackModal";
 import * as Application from "expo-application";
-import { COLORS } from "@/lib/colors";
 import { useT } from "@/i18n";
 
 
@@ -17,35 +16,38 @@ export default function AboutPage() {
     return (
         <PageSignature heading={t("about.title")}>
 
-            <View className="flex gap-6">
+            <View className="flex gap-6 pt-2">
 
-                <View className="flex justify-center min-h-12" />
-
-                <View key="3" className="flex-row items-center mb-6">
+                <View className="flex-row items-center mb-4">
                     <Image
                         source={require('../../assets/images/icon.png')}
-                        className="w-24 h-24 rounded-md"
+                        className="w-20 h-20 rounded-ios-xl shadow-ios-card"
                         resizeMode="cover" />
                     <View className="ml-4 flex-1">
-                        <Text className="text-3xl font-black text-left text-gray-900 leading-tight">
-                            App<Text className={COLORS.BLUE_TEXT}>Boiler</Text>
+                        <Text className="text-title-1 font-black text-left text-typography-900 leading-tight">
+                            App<Text className="text-tertiary-500">Boiler</Text>
                         </Text>
-                        <Text className="text-lg text-gray-500 mt-1">
+                        <Text className="text-callout text-typography-500 mt-1">
                             {t("welcome.tagline")}
                         </Text>
                     </View>
                 </View>
 
-                <Text key="1" className="text-lg text-gray-700 leading-relaxed">
+                <Text className="text-body text-typography-700 leading-7">
                     {t("about.description")}
                 </Text>
 
-                <View key="5" className="flex-row items-center justify-center mb-6 gap-3">
-                    <Button link_blue title={t("about.leaveFeedback")} onPress={() => setShowFeedback(true)} />
+                <View className="items-center mt-2">
+                    <Button secondary
+                        icon="ii:chatbubble-ellipses-outline"
+                        title={t("about.leaveFeedback")}
+                        onPress={() => setShowFeedback(true)} />
                 </View>
 
-                <View key="7" className="flex-row items-center justify-center gap-3 mb-8">
-                    <Text className="text-gray-400 text-sm">{t("about.version", { version: appVersion })}</Text>
+                <View className="items-center mt-2">
+                    <Text className="text-footnote text-typography-400">
+                        {t("about.version", { version: appVersion })}
+                    </Text>
                 </View>
 
             </View>

@@ -2,8 +2,7 @@ import { Text, View } from 'react-native';
 import React from 'react';
 import Button from "@/components/ui/Button";
 import PageSignature from "@/components/layout/PageSignature";
-import { COLORS } from "@/lib/colors";
-import { ScreenLayout } from "./Shared";
+import IconInCircle from "@/components/ui/IconInCircle";
 import { useT } from "@/i18n";
 
 interface Props {
@@ -14,24 +13,34 @@ interface Props {
 export default function WelcomePage({ onNext, onLogin }: Props) {
     const { t } = useT();
     const buttons = (
-        <View className="flex gap-4">
+        <View className="flex gap-3">
             <Button pill title={t("welcome.getStarted")} action={onNext} testID="welcome-get-started" />
-            <Button link_pale title={t("welcome.alreadyHaveAccount")} action={onLogin} />
+            <Button ghost title={t("welcome.alreadyHaveAccount")} action={onLogin} />
         </View>
     );
 
     return (
         <PageSignature noBackButton={true} buttons={buttons}>
-            <ScreenLayout>
-                <View className="flex-1 justify-center items-center mb-32">
-                    <Text className="text-5xl font-black text-center text-gray-900 leading-tight">
-                        App<Text className={COLORS.BLUE_TEXT}>Boiler</Text>
-                    </Text>
-                    <Text className="mt-5 text-xl text-gray-500 font-medium text-center px-4">
-                        {t("welcome.tagline")}
-                    </Text>
+            <View className="flex-1 justify-center items-center px-6">
+
+                <View className="mb-10">
+                    <IconInCircle
+                        variant="xlarge"
+                        rounded={false}
+                        icon="fa5:check"
+                        bgColor="#091A2F"
+                        iconColor="#FFFFFF"
+                    />
                 </View>
-            </ScreenLayout>
+
+                <Text className="text-large-title font-black text-center text-typography-900 leading-tight">
+                    App<Text className="text-tertiary-500">Boiler</Text>
+                </Text>
+                <Text className="mt-3 text-body text-typography-500 font-normal text-center px-6 leading-6">
+                    {t("welcome.tagline")}
+                </Text>
+
+            </View>
         </PageSignature>
     );
 }

@@ -1,5 +1,6 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import React, { useState } from 'react';
+import { Ionicons } from "@expo/vector-icons";
 import Button from "@/components/ui/Button";
 import PageSignature from "@/components/layout/PageSignature";
 import { ScreenLayout, SubText, TitleText } from "./Shared";
@@ -26,23 +27,26 @@ export default function FeedbackPage({ onNext, onBack }: Props) {
         <PageSignature onBack={onBack} heading={<ProgressDots total={6} completed={5} />} buttons={buttons}>
             <ScreenLayout>
 
-                <View className="flex-1">
+                <View className="flex-1 items-center justify-center">
 
-                    <TitleText>{t("onboarding.feedback.title")}</TitleText>
-
-                    <SubText>{t("onboarding.feedback.subtitle")}</SubText>
-
-                    <View className="mt-8 items-center">
-                        <Text className="text-orange-400 text-4xl">★★★★★</Text>
+                    <View className="flex-row gap-1 mb-8">
+                        {[0, 1, 2, 3, 4].map(i => (
+                            <Ionicons key={i} name="star" size={36} color="#FF9500" />
+                        ))}
                     </View>
 
-                    <View className="flex-row justify-center mt-10">
-                        <Button link_blue title={t("onboarding.feedback.leaveFeedback")} onPress={() => setShowFeedback(true)} />
+                    <TitleText>{t("onboarding.feedback.title")}</TitleText>
+                    <SubText>{t("onboarding.feedback.subtitle")}</SubText>
+
+                    <View className="mt-6">
+                        <Button secondary
+                            icon="ii:chatbubble-ellipses-outline"
+                            title={t("onboarding.feedback.leaveFeedback")}
+                            onPress={() => setShowFeedback(true)} />
                     </View>
 
                 </View>
 
-                <View className="flex p-4" />
             </ScreenLayout>
 
             <FeedbackModal visible={showFeedback} onClose={() => setShowFeedback(false)} />

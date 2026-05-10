@@ -43,6 +43,7 @@ const de: Translations = {
         },
         survey: {
             title: "Was möchtest du hier tun?",
+            subtitle: "Wir passen ein paar Vorschläge an dein Ziel an.",
             sideProject: "Ein Nebenprojekt bauen",
             production: "Eine Produktiv-App veröffentlichen",
             learning: "Den Stack lernen",
@@ -127,7 +128,11 @@ const de: Translations = {
         empty: "Noch keine Aufgaben",
         emptyHint: "Tippe auf +, um eine hinzuzufügen",
         untitled: "Ohne Titel",
-        tutorialTap: "Tippe, um deine\nerste Aufgabe hinzuzufügen",
+        allDone: "Alles erledigt",
+        tasksRemaining: {
+            one: "{{count}} Aufgabe übrig",
+            other: "{{count}} Aufgaben übrig",
+        },
     },
 
     todoEdit: {
@@ -144,6 +149,11 @@ const de: Translations = {
         languageLabel: "Sprache",
         prefsTitle: "Einstellungen",
         prefsDesc: "Sieh dir die wichtigsten App-Einstellungen an und passe sie an.",
+
+        sectionSubscription: "Abonnement",
+        sectionSync: "Synchronisierung",
+        sectionGeneral: "Allgemein",
+        sectionAccount: "Konto",
 
         subscriptionActive: "Aktives Pro-Abonnement.",
         subscriptionRenews: "Verlängert sich automatisch am {{date}}.",
@@ -180,6 +190,7 @@ const de: Translations = {
 
     userPanel: {
         anonymous: "Anonymer Nutzer",
+        signInHint: "Melde dich an, um deine Daten geräteübergreifend zu synchronisieren.",
         signUpFree: "Kostenlos registrieren",
         errorUpdatingName: "Fehler beim Aktualisieren des Namens",
     },

@@ -51,7 +51,7 @@ The domain data type is a trivial **todo list** — intentionally simple, there 
 MongoDB collections (on the web side, in `web/model/`):
 
 - **`V2Todo`** — the sample record type (`todoId`, `ownerId`, `title`, `note`, `completed`, `completedAt`, `deletedAt`, `updatedAt`)
-- **`V2User`** — per-user config (`userOnlineId`, `userPrimaryId`, `config`, `updatedAt`). The `config` field is free-form; it currently holds `defaultCurrency` and `tutorialPending`.
+- **`V2User`** — per-user config (`userOnlineId`, `userPrimaryId`, `config`, `updatedAt`). The `config` field is free-form; it currently holds `defaultCurrency`.
 - **`UserInfo`** — Clerk-sourced display info (`userId`, `userLabel`, `userImageUrl`, `lastUpdated`), refreshed if stale > 5 days
 - **`Feedback`** — submissions from the in-app feedback form
 - **`SyncLog`** — audit log for sync calls

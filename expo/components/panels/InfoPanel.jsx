@@ -9,42 +9,32 @@ function InfoPanel({ text, isCollapsible }) {
     const [expanded, setExpanded] = React.useState(false);
     const { t } = useT();
 
-    if (text && text.length) {
+    if (!text || !text.length) return null;
 
-        let content = text;
+    const content = isCollapsible && !expanded ? [text[0] + "…"] : text;
 
-        if (isCollapsible && !expanded) {
-            content = [text[0] + "..."];
-        }
-
-        return (
-            <View className="bg-[#D9F0FF] p-4 rounded-xl relative">
-
-                <View className="absolute top-4 right-4 opacity-50">
-                    {getIcon("fa5:info", 24, "#004A77")}
-                </View>
-
-                <View className="pr-10 pl-2">
-                    {content.map((paragraph, index) => (
-                        <Text key={index}
-                            numberOfLines={isCollapsible && !expanded ? 2 : undefined}
-                            className={`text-gray-800 font-medium text-base ${index > 0 ? 'mt-2' : ''}`}>
-                            {paragraph}
-                        </Text>
-                    ))}
-                </View>
-
+    return (
+        <View className="bg-tertiary-50 rounded-ios-xl p-4 flex-row gap-3">
+            <View className="pt-0.5">
+                {getIcon("ii:information-circle", 22, "#0A84FF")}
+            </View>
+            <View className="flex-1">
+                {content.map((paragraph, index) => (
+                    <Text key={index}
+                        numberOfLines={isCollapsible && !expanded ? 3 : undefined}
+                        className={`text-callout text-typography-800 ${index > 0 ? 'mt-2' : ''}`}>
+                        {paragraph}
+                    </Text>
+                ))}
                 {isCollapsible && !expanded && (
                     <Text onPress={() => setExpanded(true)}
-                        className="text-gray-600 text-sm opacity-80 text-center font-medium mt-2">
+                        className="text-footnote font-semibold text-tertiary-500 mt-2">
                         {t("infoPanel.showFull")}
                     </Text>
                 )}
             </View>
-        );
-    }
-
-    return null;
+        </View>
+    );
 }
 
 export default InfoPanel;

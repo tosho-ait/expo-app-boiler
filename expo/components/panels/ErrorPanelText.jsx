@@ -1,22 +1,20 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {getIcon} from "../../lib/iconUtil";
+import { Text, View } from 'react-native';
+import { getIcon } from "../../lib/iconUtil";
 
 
-function ErrorPanelText({error}) {
-    if (error) {
-        return (
-            <View className="bg-[#FFE6E6] p-4 flex-row items-center my-2 rounded-md">
-                <View className="ml-2 mr-5">
-                    {getIcon("fa5:exclamation-triangle", 24, "#991B1B")}
-                </View>
-                <View className="flex-1">
-                    <Text className="text-gray-800 font-semibold text-base">{error}</Text>
-                </View>
+function ErrorPanelText({ error }) {
+    if (!error) return null;
+    return (
+        <View className="bg-error-50 rounded-ios-xl px-4 py-3 my-2 flex-row items-center gap-3">
+            <View>
+                {getIcon("ii:alert-circle", 22, "#FF3B30")}
             </View>
-        );
-    }
-    return null;
+            <Text className="flex-1 text-callout font-medium text-error-700">
+                {error}
+            </Text>
+        </View>
+    );
 }
 
 export default ErrorPanelText;

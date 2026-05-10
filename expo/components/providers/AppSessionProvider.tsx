@@ -1,6 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import { useAuth, useClerk, useSSO, useUser } from "@clerk/expo";
-import { useSignIn, useSignUp } from "@clerk/expo/legacy";
+import {useAuth, useClerk, useSignIn, useSignUp, useSSO, useUser} from "@clerk/clerk-expo";
 import {useDispatch, useSelector} from "react-redux";
 import {loginOfflineUser, loginOnlineUser, logoutDevice, logoutWipeDevice} from "@/redux/action";
 import {fetchConfig, fetchErase} from "@/lib/fetchUtil";
@@ -63,18 +62,7 @@ export const AppSessionProvider = ({children}: { children: React.ReactNode; }) =
 
     const {startSSOFlow} = useSSO();
 
-    const {isSignedIn, getToken: rawGetToken, isLoaded} = useAuth();
-
-    // Clerk Core 3's getToken throws ClerkOfflineError when offline; Core 2
-    // returned null. Wrap to preserve the null-on-failure contract that the
-    // rest of the app (fetchUtil, AccountSync, finalizeOnlineLogin) relies on.
-    const getToken = async (): Promise<string | null> => {
-        try {
-            return await rawGetToken();
-        } catch {
-            return null;
-        }
-    };
+    const {isSignedIn, getToken, isLoaded} = useAuth();
 
     const dispatch = useDispatch();
 

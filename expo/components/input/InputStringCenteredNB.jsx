@@ -1,53 +1,37 @@
-import React, {useState} from 'react';
-import {Text, View, TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TextInput } from 'react-native';
 
-
-function sanitizeLabel(str) {
-    if (!str) return str;
-    const cleaned = str.replace(/[^a-zA-Z0-9- ]/g, '');
-    return cleaned.slice(0, 16);
-}
-
-function sanitizeEmail(str) {
-    if (!str) return str;
-    return str.toLowerCase();
-}
 
 const InputStringCenteredNB = ({
-                                   value,
-                                   onChange,
-                                   label,
-                                   isDisabled,
-                                   readOnly,
-                                   maxLength,
-                               }) => {
+    value,
+    onChange,
+    label,
+    isDisabled,
+    readOnly,
+    maxLength,
+}) => {
 
     const [str, setStr] = useState(value);
 
     return (
         <View className="w-full">
 
-            <View className="relative bg-white rounded-xl px-4 h-[50px] items-center flex-row">
+            <View className="relative bg-background-0 rounded-ios-xl px-4 h-[54px] items-center flex-row">
 
-                <Text className="absolute bg-white z-10 pr-2 left-4 text-gray-500 text-lg">{label}</Text>
+                <Text className="absolute bg-background-0 z-10 pr-2 left-4 text-typography-500 text-body">{label}</Text>
 
                 <TextInput
                     style={{
                         flex: 1,
-                        fontSize: 18,
+                        fontSize: 17,
+                        color: '#111111',
                         textAlign: 'center',
-                        paddingVertical: 0
+                        paddingVertical: 0,
                     }}
                     editable={!isDisabled && !readOnly}
                     textAlignVertical="center"
                     onChangeText={n => {
                         if (!isDisabled && !readOnly) {
-                            // if (isEmail) {
-                            //     n = sanitizeEmail(n);
-                            // } else
-                            //     if (isLabel) {
-                            //     n = sanitizeLabel(n);
-                            // }
                             if (maxLength && n.length > maxLength) {
                                 n = n.substring(0, maxLength);
                             }

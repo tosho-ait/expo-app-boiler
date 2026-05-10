@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { Redirect, usePathname } from "expo-router";
-import { useAppSession } from "@/components/providers/AppSessionProvider";
-import { useSelector } from "react-redux";
+import React, {useEffect} from 'react';
+import {Redirect, usePathname} from "expo-router";
+import {useAppSession} from "@/components/providers/AppSessionProvider";
+import {useSelector} from "react-redux";
 
 
-export const AppRoutingGate = ({ children }: { children: React.ReactNode; }) => {
+export const AppRoutingGate = ({children}: { children: React.ReactNode; }) => {
 
     const pathname = usePathname();
 
@@ -83,7 +83,7 @@ export const AppRoutingGate = ({ children }: { children: React.ReactNode; }) => 
     }
 
     if (needRedirect) {
-        return <Redirect href={needRedirect as any} />
+        return <Redirect href={needRedirect as any}/>
     }
 
     return (

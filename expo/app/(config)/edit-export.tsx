@@ -49,14 +49,12 @@ export default function EditExportScreen() {
 
     return (
         <PageSignature heading={t("exportPage.title")}>
-            <View className="py-10 bg-white">
+            <View className="pt-4 gap-6">
                 <InfoPanel text={[
                     t("exportPage.description"),
                 ]} />
-                <View className="px-4 pt-4 pb-10">
-                    <Button pill title={t("exportPage.button")}
-                        onPress={() => handleExportCsv(todos)} />
-                </View>
+                <Button pill title={t("exportPage.button")}
+                    onPress={() => handleExportCsv(todos)} />
             </View>
         </PageSignature>
     );

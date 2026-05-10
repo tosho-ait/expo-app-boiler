@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 
-const PanelSimpleWhite = ({ children, className }) => {
+const PanelSimpleWhite = ({ children, className = "" }) => {
     return (
-        <View className={`w-full rounded-md bg-white ${className}`}>
+        <View className={`w-full rounded-ios-xl bg-background-0 shadow-ios-card ${className}`}>
             {children}
         </View>
     );

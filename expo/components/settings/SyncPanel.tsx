@@ -1,10 +1,9 @@
 import { Text, View } from 'react-native';
 import React from "react";
-import { Show } from "@clerk/expo";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import Button from "../ui/Button";
 import { useSelector } from "react-redux";
 import { timestampToDisplayDate } from "../../lib/dateUtil";
-import PanelDark from "../panels/PanelDark";
 import { getIcon } from "../../lib/iconUtil";
 import { useAppSession } from "@/components/providers/AppSessionProvider";
 import { useT } from "@/i18n";
@@ -16,48 +15,52 @@ export default function SyncPanel() {
     const { t } = useT();
 
     let lastSync = useSelector(
-        state => state.sync?.lastSyncSuccessTimestamp);
+        (state: any) => state.sync?.lastSyncSuccessTimestamp);
 
     return (
         <>
-            <Show when="signed-in">
-                <PanelDark>
-                    <View className="flex flex-col w-full justify-center items-center py-2">
+            <SignedIn>
+                <View className="bg-background-0 rounded-ios-2xl shadow-ios-card overflow-hidden px-4 py-5">
+                    <View className="flex flex-col w-full justify-center items-center">
 
-                        <View className="mb-1">
-                            {getIcon("ii:cloud-outline", 36, "black")}
+                        <View className="w-12 h-12 rounded-full bg-success-50 items-center justify-center mb-3">
+                            {getIcon("ii:cloud-done", 26, "#34C759")}
                         </View>
 
-                        <Text className="text-md text-zinc-600 text-center w-full">
-                            {t("settings.syncedAt")}</Text>
+                        <Text className="text-footnote text-typography-500 text-center">
+                            {t("settings.syncedAt")}
+                        </Text>
 
-                        <Text className="text-lg mt-2 font-semibold">
-                            {timestampToDisplayDate(lastSync)}</Text>
+                        <Text className="text-headline font-semibold text-typography-900 mt-1">
+                            {timestampToDisplayDate(lastSync)}
+                        </Text>
 
                         {!rcUserHasActiveSubscription &&
-                            <Text className="text-sm text-zinc-600 text-center w-full mt-3">
+                            <Text className="text-footnote text-typography-500 text-center mt-3 px-2">
                                 {t("settings.syncUpgrade")}
                             </Text>}
                     </View>
-                </PanelDark>
-            </Show>
-            <Show when="signed-out">
-                <PanelDark>
+                </View>
+            </SignedIn>
+
+            <SignedOut>
+                <View className="bg-background-0 rounded-ios-2xl shadow-ios-card overflow-hidden">
                     {/* @ts-ignore */}
                     <Button href="/authenticate" custom={
-                        <View className="flex flex-col w-full justify-center items-center py-2">
-                            <View className="mb-2">
-                                {getIcon("ii:cloud-offline-outline", 36, "black")}
+                        <View className="flex flex-col w-full justify-center items-center px-4 py-5">
+                            <View className="w-12 h-12 rounded-full bg-background-100 items-center justify-center mb-3">
+                                {getIcon("ii:cloud-offline", 26, "#8E8E93")}
                             </View>
-                            <Text className="text-xl font-semibold text-center w-full">
-                                {t("settings.syncOfflineTitle")}</Text>
-                            <Text className="text-md text-zinc-600 text-center w-full mt-1">
+                            <Text className="text-headline font-semibold text-typography-900 text-center">
+                                {t("settings.syncOfflineTitle")}
+                            </Text>
+                            <Text className="text-footnote text-typography-500 text-center mt-1 px-2">
                                 {t("settings.syncOfflineDesc")}
                             </Text>
                         </View>
                     } />
-                </PanelDark>
-            </Show>
+                </View>
+            </SignedOut>
         </>
     );
 }

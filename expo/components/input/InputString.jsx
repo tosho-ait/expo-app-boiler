@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import {Animated, TextInput, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TextInput, View } from 'react-native';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    interpolate,
+    interpolateColor,
+} from 'react-native-reanimated';
 
 
 function sanitizeLabel(str) {
@@ -13,78 +20,76 @@ function sanitizeEmail(str) {
     return str.toLowerCase();
 }
 
+// Floating-label input. Built on Reanimated because under Expo 54 / Fabric,
+// the classic Animated API doesn't reliably drive layout props like `top` and
+// `fontSize` with useNativeDriver: false.
 const InputString = ({
-                         onFocus,
-                         value,
-                         onChange,
-                         myRef,
-                         label,
-                         isDisabled,
-                         readOnly,
-                         isEmail,
-                         isLabel,
-                         maxLength,
-                     }) => {
+    onFocus,
+    value,
+    onChange,
+    myRef,
+    label,
+    isDisabled,
+    readOnly,
+    isEmail,
+    isLabel,
+    maxLength,
+    error,
+}) => {
 
     const [str, setStr] = useState(value);
     const [isFocused, setIsFocused] = useState(false);
 
-    // Sync internal state when value prop changes externally (e.g. form reset)
-    React.useEffect(() => {
+    useEffect(() => {
         setStr(value || '');
     }, [value]);
 
-    // Animation state
-    const animatedValue = React.useRef(new Animated.Value(value ? 1 : 0)).current;
+    const isFloated = isFocused || (str && str.length > 0);
+    const progress = useSharedValue(value ? 1 : 0);
 
-    React.useEffect(() => {
-        Animated.timing(animatedValue, {
-            toValue: (isFocused || (str && str.length > 0)) ? 1 : 0,
-            duration: 200,
-            useNativeDriver: false,
-        }).start();
-    }, [isFocused, str]); // Track str instead of value to match internal state
+    useEffect(() => {
+        progress.value = withTiming(isFloated ? 1 : 0, { duration: 200 });
+    }, [isFloated, progress]);
 
-    // If external value changes, we might want to sync, but sticking to original logic for now
-    // except reacting to value prop if provided?
-    // Original code didn't sync, so I won't introduce new sync logic to minimize side effects,
-    // BUT I must ensure animation respects the *current* display value which is 'str'.
+    // Color of the label: muted at rest, accent on focus, red on error.
+    const focusColor = error ? '#FF3B30' : '#0A84FF';
 
-    const labelTop = animatedValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: [16, -10]
-    });
+    const animatedLabel = useAnimatedStyle(() => ({
+        top: interpolate(progress.value, [0, 1], [16, -10]),
+        fontSize: interpolate(progress.value, [0, 1], [16, 12]),
+        color: interpolateColor(progress.value, [0, 1], ['#8E8E93', focusColor]),
+    }));
 
-    const labelSize = animatedValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: [16, 12]
-    });
+    const borderClass = error
+        ? "border-error-500"
+        : isFocused ? "border-tertiary-500" : "border-outline-200";
 
     return (
         <View className="w-full relative mt-1">
 
-            <Animated.Text style={{
-                position: 'absolute',
-                left: 12,
-                top: labelTop,
-                fontSize: labelSize,
-                color: '#6b7280',
-                zIndex: 9999,
-                backgroundColor: 'white',
-                paddingHorizontal: 4,
-            }}>
+            <Animated.Text style={[
+                animatedLabel,
+                {
+                    position: 'absolute',
+                    left: 12,
+                    zIndex: 9999,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 4,
+                },
+            ]}>
                 {label}
             </Animated.Text>
 
-            <View className="bg-white border border-gray-300 rounded-xl px-4 h-[50px] items-center flex-row">
+            <View className={`bg-background-0 border rounded-ios-xl px-4 h-[50px] items-center flex-row ${borderClass}`}>
 
                 <TextInput
                     ref={myRef}
                     style={{
                         flex: 1,
-                        fontSize: 18,
+                        fontSize: 17,
+                        color: isDisabled ? '#8E8E93' : '#111111',
                         textAlign: 'left',
-                        paddingVertical: 0
+                        paddingVertical: 0,
                     }}
                     editable={!isDisabled && !readOnly}
                     textAlignVertical="center"

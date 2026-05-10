@@ -20,20 +20,20 @@ export default function SignUpPage({ onNext, onBack }: Props) {
     const { t } = useT();
     const [error, setError] = useState<string | null>(null);
 
-    const buttons = <Button link_pale title={t("common.skip")} action={onNext} testID="onboarding-skip" />;
+    const buttons = <Button ghost title={t("common.skip")} action={onNext} testID="onboarding-skip" />;
 
     return (
         <PageSignature onBack={onBack} heading={<ProgressDots total={6} completed={4} />} buttons={buttons}>
             <ScreenLayout>
-                <View className="items-center mb-8">
+                <View className="items-center mb-4 mt-6">
                     <TitleText>{t("onboarding.signup.title")}</TitleText>
                     <SubText>{t("onboarding.signup.subtitle")}</SubText>
                 </View>
-                <View className="flex-col gap-4 w-full mb-4">
+                <View className="flex-col gap-3 w-full mt-2">
                     <ErrorPanelText error={error} />
                     <SocialLogin
                         onSocialLogin={async (provider: any) => {
-                            const {error: err} = await doSignInSocial({ provider, redirectPath: "onboarding" });
+                            const { error: err } = await doSignInSocial({ provider, redirectPath: "onboarding" });
                             if (err) {
                                 const errMsg = err.errors?.[0]?.longMessage || err.errors?.[0]?.message || err.message || t("auth.signInFailed");
                                 setError(typeof errMsg === 'string' ? errMsg : t("auth.signInFailedShort"));

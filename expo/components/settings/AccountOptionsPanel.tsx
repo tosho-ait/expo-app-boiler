@@ -1,22 +1,22 @@
 import { View } from 'react-native';
 import React from "react";
 import LinkSection from "../panels/LinkSection";
-import { Show } from "@clerk/expo";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { useSelector } from "react-redux";
 import PanelDark from "../panels/PanelDark";
 import { useAppSession } from "../providers/AppSessionProvider";
 import { useT } from "@/i18n";
 
 export default function AccountOptionsPanel() {
-    const { doSignOut, doEraseAccount, doLogoutWipeDevice, rcUser } = useAppSession();
+    const { doSignOut, doEraseAccount, doLogoutWipeDevice } = useAppSession();
     const { t } = useT();
 
-    let dirtyTimestamp = useSelector(state => state.sync?.dirtyTimestamp);
+    let dirtyTimestamp = useSelector((state: any) => state.sync?.dirtyTimestamp);
     let isDirty = !!dirtyTimestamp;
 
     return (
         <View>
-            <Show when="signed-out">
+            <SignedOut>
                 <PanelDark>
                     <LinkSection
                         onPress={doLogoutWipeDevice}
@@ -28,12 +28,17 @@ export default function AccountOptionsPanel() {
                         }}
                         title={t("settings.deleteDataTitle")}
                         description={t("settings.deleteDataDesc")}
-                        icon="ii:trash-outline" />
+                        icon="ii:trash-outline"
+                        tint="bg-error-50"
+                        iconColor="#FF3B30"
+                    />
                 </PanelDark>
-            </Show>
-            <Show when="signed-in">
+            </SignedOut>
+
+            <SignedIn>
                 <PanelDark>
-                    <LinkSection onPress={doEraseAccount}
+                    <LinkSection
+                        onPress={doEraseAccount}
                         confirm={{
                             title: t("settings.deleteAccountTitle"),
                             text: t("settings.deleteAccountConfirm"),
@@ -43,33 +48,43 @@ export default function AccountOptionsPanel() {
                         }}
                         title={t("settings.deleteAccountTitle")}
                         description={t("settings.deleteAccountDesc")}
-                        icon="ii:trash-outline" />
+                        icon="ii:trash-outline"
+                        tint="bg-error-50"
+                        iconColor="#FF3B30"
+                    />
 
-                    <View className="px-4"><View className="h-px bg-white" /></View>
+                    {!isDirty && (
+                        <LinkSection
+                            title={t("settings.signOutTitle")}
+                            description={t("settings.signOutDesc")}
+                            icon="ii:exit-outline"
+                            tint="bg-background-100"
+                            iconColor="#636366"
+                            onPress={doSignOut}
+                            confirm={{
+                                title: t("settings.signOutTitle"),
+                                text: t("settings.signOutConfirm"),
+                                buttonLabel: t("settings.signOutTitle")
+                            }} />
+                    )}
 
-                    {!isDirty && <LinkSection title={t("settings.signOutTitle")}
-                        description={t("settings.signOutDesc")}
-                        icon="ii:exit-outline"
-                        onPress={doSignOut}
-                        confirm={{
-                            title: t("settings.signOutTitle"),
-                            text: t("settings.signOutConfirm"),
-                            buttonLabel: t("settings.signOutTitle")
-                        }} />}
-
-                    {isDirty && <LinkSection title={t("settings.signOutTitle")}
-                        description={t("settings.signOutDesc")}
-                        icon="ii:exit-outline"
-                        onPress={doSignOut}
-                        confirm={{
-                            title: t("settings.signOutTitle"),
-                            text: t("settings.signOutDirtyConfirm"),
-                            text2: t("settings.signOutConfirm"),
-                            buttonLabel: t("settings.signOutTitle")
-                        }} />}
-
+                    {isDirty && (
+                        <LinkSection
+                            title={t("settings.signOutTitle")}
+                            description={t("settings.signOutDesc")}
+                            icon="ii:exit-outline"
+                            tint="bg-background-100"
+                            iconColor="#636366"
+                            onPress={doSignOut}
+                            confirm={{
+                                title: t("settings.signOutTitle"),
+                                text: t("settings.signOutDirtyConfirm"),
+                                text2: t("settings.signOutConfirm"),
+                                buttonLabel: t("settings.signOutTitle")
+                            }} />
+                    )}
                 </PanelDark>
-            </Show>
+            </SignedIn>
         </View>
     );
 }

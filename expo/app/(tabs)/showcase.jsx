@@ -20,18 +20,19 @@ import PanelFullWhite from "@/components/panels/PanelFullWhite";
 import PanelSimpleWhite from "@/components/panels/PanelSimpleWhite";
 import PanelEmpty from "@/components/panels/PanelEmpty";
 import LinkSection from "@/components/panels/LinkSection";
+import Card from "@/components/ui/Card";
+import AppText from "@/components/ui/AppText";
 import ViewSwitch from "@/components/ui/ViewSwitch";
 import SurveyOption from "@/components/ui/SurveyOption";
 import ProgressDots from "@/components/ui/ProgressDots";
 import GraphicFavorites from "@/components/graphics/GraphicFavorites";
 import { getIcon } from "@/lib/iconUtil";
-import { COLORS } from "@/lib/colors";
 
 
 function Section({ title, children }) {
     return (
-        <View className="mb-8">
-            <Text className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">
+        <View className="mb-9">
+            <Text className="text-caption font-semibold text-typography-500 uppercase tracking-wider mb-3 px-1">
                 {title}
             </Text>
             <View className="gap-3">
@@ -46,26 +47,26 @@ function Row({ children }) {
 }
 
 function Label({ children }) {
-    return <Text className="text-xs text-gray-500 mb-1">{children}</Text>;
+    return <Text className="text-footnote text-typography-400 mb-0.5 mt-1">{children}</Text>;
 }
 
 
 function ColorSwatches() {
     const swatches = [
-        { label: "BLUE", bg: COLORS.BLUE_BG, hex: COLORS.BLUE },
-        { label: "GREEN", bg: COLORS.GREEN_BG, hex: COLORS.GREEN },
-        { label: "PURPLE", bg: COLORS.PURPLE_BG, hex: COLORS.PURPLE },
-        { label: "YELLOW", bg: COLORS.YELLOW_BG, hex: COLORS.YELLOW },
-        { label: "RED", bg: COLORS.RED_BG, hex: COLORS.RED },
-        { label: "ACCENT", bg: COLORS.ACCENT_BG, hex: COLORS.ACCENT },
+        { label: "BRAND", bg: "bg-primary-800", hex: "#091A2F" },
+        { label: "BLUE", bg: "bg-tertiary-500", hex: "#0A84FF" },
+        { label: "GREEN", bg: "bg-success-500", hex: "#34C759" },
+        { label: "PURPLE", bg: "bg-[#AF52DE]", hex: "#AF52DE" },
+        { label: "ORANGE", bg: "bg-warning-500", hex: "#FF9500" },
+        { label: "RED", bg: "bg-error-500", hex: "#FF3B30" },
     ];
     return (
         <Row>
             {swatches.map(s => (
                 <View key={s.label} className="items-center">
-                    <View className={`w-16 h-16 rounded-xl ${s.bg}`} />
-                    <Text className="text-[10px] text-gray-600 mt-1 font-semibold">{s.label}</Text>
-                    <Text className="text-[10px] text-gray-400">{s.hex}</Text>
+                    <View className={`w-16 h-16 rounded-ios-xl shadow-ios-card ${s.bg}`} />
+                    <Text className="text-caption-2 text-typography-700 mt-1.5 font-semibold">{s.label}</Text>
+                    <Text className="text-caption-2 text-typography-400">{s.hex}</Text>
                 </View>
             ))}
         </Row>
@@ -84,11 +85,11 @@ function IconGrid() {
     return (
         <Row>
             {items.map(ic => (
-                <View key={ic} className="items-center w-[70px]">
-                    <View className="w-12 h-12 bg-gray-100 rounded-xl items-center justify-center">
-                        {getIcon(ic, 22, "#374151")}
+                <View key={ic} className="items-center w-[68px]">
+                    <View className="w-12 h-12 bg-background-0 rounded-ios-lg items-center justify-center shadow-ios-card">
+                        {getIcon(ic, 22, "#091A2F")}
                     </View>
-                    <Text className="text-[9px] text-gray-500 mt-1" numberOfLines={1}>{ic}</Text>
+                    <Text className="text-caption-2 text-typography-500 mt-1" numberOfLines={1}>{ic}</Text>
                 </View>
             ))}
         </Row>
@@ -103,62 +104,92 @@ export default function ShowcaseScreen() {
     const [note, setNote] = useState("");
     const [selectValue, setSelectValue] = useState("b");
     const [viewId, setViewId] = useState("list");
+    const [surveyChoice, setSurveyChoice] = useState("");
     const [showBottomSheet, setShowBottomSheet] = useState(false);
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [showError, setShowError] = useState(false);
 
     return (
-        <View className="flex-1 bg-gray-100">
+        <View className="flex-1 bg-background-100">
             <SafeAreaView className="flex-1">
-                <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 120 }}>
+                <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
 
-                    <View className="mb-6">
-                        <Text className="text-3xl font-bold text-gray-900">UI Showcase</Text>
-                        <Text className="text-gray-500 mt-1">
-                            A gallery of every component available in the boilerplate.
+                    <View className="mb-6 mt-2">
+                        <Text className="text-large-title font-bold text-typography-900">UI Showcase</Text>
+                        <Text className="text-callout text-typography-500 mt-1">
+                            Every component, restyled in iOS 17 / soft-neumorphic.
                         </Text>
                     </View>
 
-                    {/* COLORS */}
+                    <Section title="Typography (AppText)">
+                        <Card padding="md">
+                            <AppText variant="largeTitle">Large title</AppText>
+                            <AppText variant="title1">Title 1</AppText>
+                            <AppText variant="title2">Title 2</AppText>
+                            <AppText variant="title3">Title 3</AppText>
+                            <AppText variant="headline">Headline</AppText>
+                            <AppText variant="body">Body</AppText>
+                            <AppText variant="callout" tone="secondary">Callout · secondary tone</AppText>
+                            <AppText variant="subhead" tone="tertiary">Subhead · tertiary tone</AppText>
+                            <AppText variant="footnote">Footnote</AppText>
+                            <AppText variant="caption" tone="accent">Caption · accent</AppText>
+                        </Card>
+                    </Section>
+
                     <Section title="Colors">
                         <ColorSwatches />
                     </Section>
 
-                    {/* ICONS */}
                     <Section title="Icons (getIcon)">
-                        <Text className="text-xs text-gray-400 mb-1">
+                        <Text className="text-caption text-typography-400">
                             Format: <Text className="font-mono">provider:name</Text> — ii, fa, fa5, fa6, fe, mi, mc, ad, et
                         </Text>
                         <IconGrid />
                     </Section>
 
-                    {/* BUTTON VARIANTS */}
                     <Section title="Buttons">
-                        <Label>pill — primary full-width CTA</Label>
-                        <Button pill title="Continue" onPress={() => {}} />
+                        <Label>pill — primary CTA</Label>
+                        <Button pill title="Continue" onPress={() => { }} />
 
-                        <Label>blue — solid rounded-lg button</Label>
+                        <Label>blue — solid CTA</Label>
                         <Row>
-                            <Button blue title="Save" onPress={() => {}} />
-                            <Button blue title="With icon" icon="fa5:check" onPress={() => {}} />
-                            <Button blue title="Disabled" isDisabled onPress={() => {}} />
+                            <Button blue title="Save" onPress={() => { }} />
+                            <Button blue title="With icon" icon="fa5:check" onPress={() => { }} />
+                            <Button blue title="Disabled" isDisabled onPress={() => { }} />
                         </Row>
 
-                        <Label>link_blue — accent-colored text link</Label>
+                        <Label>secondary — tinted CTA</Label>
                         <Row>
-                            <Button link_blue title="Back" icon="ii:chevron-back" onPress={() => {}} />
-                            <Button link_blue title="Leave feedback" onPress={() => {}} />
+                            <Button secondary title="Cancel" onPress={() => { }} />
+                            <Button secondary icon="ii:share-outline" title="Share" onPress={() => { }} />
                         </Row>
 
-                        <Label>link_pale — muted text link (secondary actions)</Label>
+                        <Label>ghost — minimal action</Label>
                         <Row>
-                            <Button link_pale title="Skip for now" onPress={() => {}} />
-                            <Button link_pale title="Forgot password?" onPress={() => {}} />
+                            <Button ghost title="Skip for now" onPress={() => { }} />
+                            <Button ghost icon="ii:add" title="Add another" onPress={() => { }} />
+                        </Row>
+
+                        <Label>destructive — irreversible action</Label>
+                        <Row>
+                            <Button destructive title="Delete account" onPress={() => { }} />
+                        </Row>
+
+                        <Label>link_blue — accent text link</Label>
+                        <Row>
+                            <Button link_blue title="Back" icon="ii:chevron-back" onPress={() => { }} />
+                            <Button link_blue title="Leave feedback" onPress={() => { }} />
+                        </Row>
+
+                        <Label>link_pale — muted text link</Label>
+                        <Row>
+                            <Button link_pale title="Skip for now" onPress={() => { }} />
+                            <Button link_pale title="Forgot password?" onPress={() => { }} />
                         </Row>
 
                         <Label>with confirmation dialog</Label>
                         <Button
-                            blue
+                            destructive
                             title="Delete (with confirm)"
                             confirm={{
                                 title: "Delete Item",
@@ -169,43 +200,52 @@ export default function ShowcaseScreen() {
                         />
                     </Section>
 
-                    {/* ROUND + DOT BUTTONS */}
                     <Section title="Round & Dot buttons">
                         <Label>RoundButton variants</Label>
                         <Row>
-                            <RoundButton variant="close" onPress={() => {}} />
-                            <RoundButton variant="save" onPress={() => {}} />
-                            <RoundButton variant="delete" onPress={() => {}} />
-                            <RoundButton variant="reject" onPress={() => {}} />
+                            <RoundButton variant="close" onPress={() => { }} />
+                            <RoundButton variant="save" onPress={() => { }} />
+                            <RoundButton variant="delete" onPress={() => { }} />
+                            <RoundButton variant="reject" onPress={() => { }} />
                         </Row>
 
                         <Label>DotButton</Label>
                         <Row>
-                            <DotButton icon="ii:search" onPress={() => {}} />
-                            <DotButton icon="ii:notifications-outline" active overlay="5" onPress={() => {}} />
-                            <DotButton icon="ii:filter" onPress={() => {}} />
+                            <DotButton icon="ii:search" onPress={() => { }} />
+                            <DotButton icon="ii:notifications-outline" active overlay="5" onPress={() => { }} />
+                            <DotButton icon="ii:filter" onPress={() => { }} />
                         </Row>
                     </Section>
 
-                    {/* ICON IN CIRCLE */}
-                    <Section title="IconInCircle">
+                    <Section title="IconInCircle / IconTile">
+                        <Label>Round (rounded-full)</Label>
                         <Row>
                             <View className="items-center">
-                                <IconInCircle variant="small" icon="fa5:user" bgColor={COLORS.BLUE} />
-                                <Text className="text-[10px] mt-1 text-gray-500">small</Text>
+                                <IconInCircle variant="small" icon="fa5:user" bgColor="#0A84FF" />
+                                <Text className="text-caption-2 mt-1 text-typography-500">small</Text>
                             </View>
                             <View className="items-center">
-                                <IconInCircle variant="medium" icon="fa5:crown" bgColor={COLORS.YELLOW} />
-                                <Text className="text-[10px] mt-1 text-gray-500">medium</Text>
+                                <IconInCircle variant="medium" icon="fa5:crown" bgColor="#FF9500" />
+                                <Text className="text-caption-2 mt-1 text-typography-500">medium</Text>
                             </View>
                             <View className="items-center">
-                                <IconInCircle variant="large" icon="mc:earth" bgColor={COLORS.PURPLE} />
-                                <Text className="text-[10px] mt-1 text-gray-500">large</Text>
+                                <IconInCircle variant="large" icon="mc:earth" bgColor="#AF52DE" />
+                                <Text className="text-caption-2 mt-1 text-typography-500">large</Text>
                             </View>
+                            <View className="items-center">
+                                <IconInCircle variant="xlarge" icon="ii:rocket" bgColor="#34C759" />
+                                <Text className="text-caption-2 mt-1 text-typography-500">xlarge</Text>
+                            </View>
+                        </Row>
+
+                        <Label>Square-rounded tile</Label>
+                        <Row>
+                            <IconInCircle variant="small" rounded={false} icon="ii:settings" bgColor="#091A2F" />
+                            <IconInCircle variant="medium" rounded={false} icon="ii:heart" bgColor="#FF3B30" />
+                            <IconInCircle variant="large" rounded={false} icon="fa5:check" bgColor="#091A2F" />
                         </Row>
                     </Section>
 
-                    {/* INPUTS */}
                     <Section title="Inputs">
                         <InputString label="Name" value={text} onChange={setText} />
                         <InputStringEmail value={email} onChange={setEmail} />
@@ -223,48 +263,65 @@ export default function ShowcaseScreen() {
                         />
                     </Section>
 
-                    {/* VIEW SWITCH */}
-                    <Section title="ViewSwitch">
-                        <Row>
-                            <ViewSwitch
-                                views={[
-                                    { id: "list", icon: "ii:list" },
-                                    { id: "grid", icon: "ii:grid" },
-                                    { id: "chart", icon: "ii:pie-chart" },
-                                ]}
-                                activeViewId={viewId}
-                                onSelect={setViewId}
-                            />
-                        </Row>
+                    <Section title="ViewSwitch (segmented)">
+                        <ViewSwitch
+                            views={[
+                                { id: "list", icon: "ii:list" },
+                                { id: "grid", icon: "ii:grid" },
+                                { id: "chart", icon: "ii:pie-chart" },
+                            ]}
+                            activeViewId={viewId}
+                            onSelect={setViewId}
+                        />
                     </Section>
 
-                    {/* PANELS */}
+                    <Section title="Cards">
+                        <Label>Card · elevated</Label>
+                        <Card variant="elevated">
+                            <Text className="text-body text-typography-700">Soft-shadowed white surface.</Text>
+                        </Card>
+
+                        <Label>Card · grouped</Label>
+                        <Card variant="grouped">
+                            <Text className="text-body text-typography-700">Hairline border, no shadow — sits flush.</Text>
+                        </Card>
+
+                        <Label>Card · tinted</Label>
+                        <Card variant="tinted">
+                            <Text className="text-body text-typography-700">Tinted fill — for callouts and chips.</Text>
+                        </Card>
+                    </Section>
+
                     <Section title="Panels">
-                        <Label>PanelFullWhite</Label>
+                        <Label>PanelFullWhite (page section)</Label>
                         <PanelFullWhite>
-                            <Text className="text-gray-700">Full-width white panel, no rounding.</Text>
+                            <Text className="text-body text-typography-700">Full-width content card.</Text>
                         </PanelFullWhite>
 
-                        <Label>PanelSimpleWhite (rounded)</Label>
+                        <Label>PanelSimpleWhite</Label>
                         <PanelSimpleWhite className="p-4">
-                            <Text className="text-gray-700">Rounded white panel.</Text>
+                            <Text className="text-body text-typography-700">Rounded white card.</Text>
                         </PanelSimpleWhite>
 
-                        <Label>PanelDark (grouped list)</Label>
+                        <Label>PanelDark — iOS grouped list</Label>
                         <PanelDark>
                             <LinkSection
-                                href={null}
-                                onPress={() => {}}
+                                onPress={() => { }}
                                 title="Settings"
                                 description="Adjust your preferences"
                                 icon="ii:settings-outline"
                             />
-                            <View className="px-4"><View className="h-px bg-white" /></View>
                             <LinkSection
-                                onPress={() => {}}
+                                onPress={() => { }}
                                 title="Export"
                                 description="Download your data"
                                 icon="mc:export-variant"
+                            />
+                            <LinkSection
+                                onPress={() => { }}
+                                title="Account"
+                                description="Manage your profile"
+                                icon="ii:person-circle-outline"
                             />
                         </PanelDark>
 
@@ -276,7 +333,7 @@ export default function ShowcaseScreen() {
 
                         <Label>InfoPanel (collapsible)</Label>
                         <InfoPanel isCollapsible text={[
-                            "This panel is collapsible. Only the first paragraph is shown until the user taps 'show full info'.",
+                            "This panel is collapsible. Only the first paragraph shows until expanded.",
                             "Second paragraph hidden until expanded.",
                         ]} />
 
@@ -290,7 +347,7 @@ export default function ShowcaseScreen() {
 
                         <Label>ErrorPanelText</Label>
                         <Row>
-                            <Button link_small title={showError ? "Hide error" : "Show error"}
+                            <Button secondary title={showError ? "Hide error" : "Show error"}
                                 onPress={() => setShowError(v => !v)} />
                         </Row>
                         {showError && <ErrorPanelText error="Something went wrong. Please try again." />}
@@ -300,61 +357,57 @@ export default function ShowcaseScreen() {
                             icon="folder-search-outline"
                             text="No items here yet"
                             subtext="Add your first item to get started"
-                            action={{ label: "Add Item", onPress: () => {} }}
+                            action={{ label: "Add Item", onPress: () => { } }}
                         />
                     </Section>
 
-                    {/* MODALS */}
                     <Section title="Modals & Sheets">
                         <Row>
                             <Button blue title="Open BottomSheet" onPress={() => setShowBottomSheet(true)} />
-                            <Button blue title="Open ActionSheet" onPress={() => setShowActionSheet(true)} />
+                            <Button secondary title="Open ActionSheet" onPress={() => setShowActionSheet(true)} />
                         </Row>
 
-                        <Label>ModalHeader (standalone preview)</Label>
-                        <View className="bg-white rounded-xl border border-gray-200">
-                            <ModalHeader title="Modal Title" onClose={() => {}} />
-                            <View className="px-6 pb-4">
-                                <Text className="text-gray-600">Modal content goes here.</Text>
+                        <Label>ModalHeader (preview)</Label>
+                        <Card padding="none">
+                            <ModalHeader title="Modal Title" onClose={() => { }} />
+                            <View className="px-5 pb-4">
+                                <Text className="text-body text-typography-600">Modal content goes here.</Text>
                             </View>
-                        </View>
+                        </Card>
                     </Section>
 
-                    {/* PROGRESS DOTS */}
                     <Section title="ProgressDots">
-                        <Row>
-                            <ProgressDots total={6} completed={1} />
-                        </Row>
-                        <Row>
-                            <ProgressDots total={6} completed={3} />
-                        </Row>
-                        <Row>
-                            <ProgressDots total={6} completed={6} />
-                        </Row>
+                        <ProgressDots total={6} completed={1} />
+                        <View className="h-3" />
+                        <ProgressDots total={6} completed={3} />
+                        <View className="h-3" />
+                        <ProgressDots total={6} completed={6} />
                     </Section>
 
-                    {/* SURVEY OPTIONS */}
                     <Section title="SurveyOption">
-                        <SurveyOption title="Build a side project" icon="ii:rocket-outline" onPress={() => {}} />
-                        <SurveyOption title="Ship a production app" icon="ii:flash-outline" onPress={() => {}} />
-                        <SurveyOption title="Learn the stack" icon="ii:school-outline" onPress={() => {}} />
+                        <SurveyOption
+                            icon="ii:rocket-outline"
+                            title="Build a side project"
+                            selected={surveyChoice === "side"}
+                            onPress={() => setSurveyChoice("side")} />
+                        <SurveyOption
+                            icon="ii:flash-outline"
+                            title="Ship a production app"
+                            selected={surveyChoice === "prod"}
+                            onPress={() => setSurveyChoice("prod")} />
+                        <SurveyOption
+                            icon="ii:school-outline"
+                            title="Learn the stack"
+                            selected={surveyChoice === "learn"}
+                            onPress={() => setSurveyChoice("learn")} />
                     </Section>
 
-                    {/* GRAPHICS */}
                     <Section title="Graphics">
-                        <GraphicFavorites />
-                    </Section>
-
-                    {/* TYPOGRAPHY */}
-                    <Section title="Typography">
-                        <Text className="text-4xl font-black text-gray-900">Display</Text>
-                        <Text className="text-3xl font-bold text-gray-900">Heading 1</Text>
-                        <Text className="text-2xl font-bold text-gray-900">Heading 2</Text>
-                        <Text className="text-xl font-semibold text-gray-800">Heading 3</Text>
-                        <Text className="text-lg text-gray-700">Body large</Text>
-                        <Text className="text-base text-gray-700">Body regular</Text>
-                        <Text className="text-sm text-gray-500">Body small</Text>
-                        <Text className="text-xs text-gray-400 uppercase tracking-wider">Caption</Text>
+                        <Card padding="lg" variant="tinted">
+                            <View className="items-center">
+                                <GraphicFavorites />
+                            </View>
+                        </Card>
                     </Section>
 
                 </ScrollView>
@@ -366,7 +419,7 @@ export default function ShowcaseScreen() {
                 title="Bottom Sheet"
                 heightClass="h-[50%]">
                 <View className="p-6 gap-4">
-                    <Text className="text-gray-700 text-lg">
+                    <Text className="text-body text-typography-700">
                         BottomSheet slides up from the bottom and has a modal header.
                     </Text>
                     <Button blue title="Close" onPress={() => setShowBottomSheet(false)} />
@@ -375,9 +428,9 @@ export default function ShowcaseScreen() {
 
             <ActionSheet visible={showActionSheet} onClose={() => setShowActionSheet(false)}>
                 <View className="px-4 pb-4 gap-2">
-                    <Button link_p title="Edit" icon="ii:pencil-outline" onPress={() => setShowActionSheet(false)} />
-                    <Button link_p title="Share" icon="ii:share-outline" onPress={() => setShowActionSheet(false)} />
-                    <Button link_pp title="Delete" icon="ii:trash-outline" onPress={() => setShowActionSheet(false)} />
+                    <Button ghost title="Edit" icon="ii:pencil-outline" onPress={() => setShowActionSheet(false)} />
+                    <Button ghost title="Share" icon="ii:share-outline" onPress={() => setShowActionSheet(false)} />
+                    <Button ghost title="Delete" icon="ii:trash-outline" onPress={() => setShowActionSheet(false)} />
                 </View>
             </ActionSheet>
         </View>

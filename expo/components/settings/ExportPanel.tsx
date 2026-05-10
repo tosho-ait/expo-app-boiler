@@ -1,14 +1,17 @@
 import React from "react";
-import PanelDark from "../panels/PanelDark";
 import LinkSection from "../panels/LinkSection";
 import { useT } from "@/i18n";
 
 export default function ExportPanel() {
     const { t } = useT();
     return (
-        <PanelDark>
-            <LinkSection href="/edit-export" title={t("settings.exportTitle")} icon="mc:export-variant"
-                description={t("settings.exportDesc")} />
-        </PanelDark>
+        <LinkSection
+            href="/edit-export"
+            title={t("settings.exportTitle")}
+            icon="mc:export-variant"
+            tint="bg-success-50"
+            iconColor="#34C759"
+            description={t("settings.exportDesc")}
+        />
     );
 }

@@ -6,17 +6,30 @@ interface Props {
     completed: number;
 }
 
+// iOS-style progress indicator: thin pill segments that fill as you advance.
+// Active segment is wider with brand fill; remaining segments are hairline pills.
 export default function ProgressDots({ total, completed }: Props) {
 
     if (total <= 0) return null;
 
     return (
-        <View className="flex-row justify-center items-center w-full">
-            {Array.from({ length: total }, (_, index) => (
-                <View key={`progress-dot-${index}`}
-                    className={`w-2.5 h-2.5 rounded-full mx-1.5 ${index < completed ? 'bg-sky-500' : 'bg-gray-200'}`}
-                />
-            ))}
+        <View className="flex-row items-center justify-center gap-1.5 w-full px-4">
+            {Array.from({ length: total }, (_, index) => {
+                const isDone = index < completed;
+                const isActive = index === completed - 1;
+                return (
+                    <View key={`progress-segment-${index}`}
+                        className={
+                            "h-1 rounded-full " +
+                            (isActive
+                                ? "flex-[2] bg-primary-800"
+                                : isDone
+                                    ? "flex-1 bg-primary-800/70"
+                                    : "flex-1 bg-background-200")
+                        }
+                    />
+                );
+            })}
         </View>
     );
 }
